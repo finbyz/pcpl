@@ -1,0 +1,37 @@
+{
+ "cards": [
+  {
+   "hidden": 0,
+   "label": "Reports",
+   "links": "[\n    {\n        \"dependencies\": [\n            \"Issue\"\n        ],\n        \"doctype\": \"Issue\",\n        \"is_query_report\": true,\n        \"label\": \"First Response Time for Issues\",\n        \"name\": \"First Response Time for Issues\",\n        \"type\": \"report\"\n    },\n    {\n        \"dependencies\": [\n            \"Issue\"\n        ],\n        \"doctype\": \"Issue\",\n        \"is_query_report\": true,\n        \"label\": \"Issue Analytics\",\n        \"name\": \"Issue Analytics\",\n        \"type\": \"report\"\n    },\n    {\n        \"dependencies\": [\n            \"Issue\"\n        ],\n        \"doctype\": \"Issue\",\n        \"is_query_report\": true,\n        \"label\": \"Issue Summary\",\n        \"name\": \"Issue Summary\",\n        \"type\": \"report\"\n    }\n]"
+  }
+ ],
+ "category": "Modules",
+ "charts": [],
+ "creation": "2021-03-31 17:07:50.328028",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Desk Page",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Report",
+ "modified": "2021-03-31 17:08:21.459744",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "Report",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Purchase Requisiton Listing",
+   "link_to": "Purchase Requisiton Listing",
+   "type": "Report"
+  }
+ ]
+}
