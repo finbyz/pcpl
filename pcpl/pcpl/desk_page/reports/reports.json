@@ -13,12 +13,19 @@
  "is_default": 0,
  "is_standard": 1,
  "label": "REPORTS",
- "modified": "2021-03-31 16:49:25.522606",
+ "modified": "2021-03-31 16:55:57.466539",
  "modified_by": "princecare.erpnext@gmail.com",
  "module": "Pcpl",
  "name": "REPORTS",
  "owner": "princecare.erpnext@gmail.com",
  "pin_to_bottom": 1,
  "pin_to_top": 0,
- "shortcuts": []
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Purchase Requisiton Listing",
+   "link_to": "Purchase Requisiton Listing",
+   "type": "Report"
+  }
+ ]
 }
