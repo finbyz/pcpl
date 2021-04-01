@@ -1,21 +1,99 @@
 {
  "actions": [],
- "creation": "2021-04-01 23:17:55.219766",
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2021-04-01 11:35:39.486280",
  "doctype": "DocType",
+ "document_type": "Setup",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "section_break_1"
+  "naming_series",
+  "company",
+  "column_break_3",
+  "posting_date",
+  "section_break_5",
+  "production_sheet_item",
+  "status",
+  "warehouses",
+  "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "section_break_1",
+   "default": "PS-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "PS-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_5",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "production_sheet_item",
+   "fieldtype": "Table",
+   "label": "Production Sheet Item",
+   "options": "Production Sheet Item"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nSubmitted\nNot Started\nIn Process\nCompleted\nClosed\nCancelled\nMaterial Requested"
+  },
+  {
+   "fieldname": "warehouses",
+   "fieldtype": "Table MultiSelect",
+   "hidden": 1,
+   "label": "Warehouses",
+   "options": "Production Plan Material Request Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Production Sheet",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Production Sheet",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
- "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2021-04-01 23:17:55.219766",
+ "modified": "2021-04-01 11:47:28.445529",
  "modified_by": "Administrator",
  "module": "Pcpl",
  "name": "Production Sheet",
@@ -29,12 +107,12 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "Manufacturing User",
    "share": 1,
    "write": 1
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC",
+ "sort_order": "ASC",
  "track_changes": 1
 }
