@@ -1,84 +1,62 @@
 {
  "actions": [],
- "autoname": "naming_series:",
- "creation": "2021-04-01 19:17:27.237728",
+ "creation": "2021-04-01 11:30:04.339728",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "naming_series",
-  "company",
-  "column_break_3",
-  "posting_date",
-  "section_break_5",
-  "status",
-  "warehouses",
-  "amended_from"
+  "item_code",
+  "planned_qty",
+  "warehouse",
+  "produced_qty",
+  "remarks"
  ],
  "fields": [
   {
-   "default": "PS-.YYYY.-",
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Naming Series",
-   "options": "PS-.YYYY.-",
-   "reqd": 1
-  },
-  {
-   "fieldname": "company",
+   "columns": 2,
+   "fieldname": "item_code",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "Item Code",
+   "options": "Item",
    "reqd": 1
   },
   {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "Today",
-   "fieldname": "posting_date",
-   "fieldtype": "Date",
+   "columns": 2,
+   "fieldname": "planned_qty",
+   "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Posting Date",
+   "label": "Planned Qty",
    "reqd": 1
   },
   {
-   "fieldname": "section_break_5",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "\nDraft\nSubmitted\nNot Started\nIn Process\nCompleted\nClosed\nCancelled\nMaterial Requested"
-  },
-  {
-   "fieldname": "warehouses",
-   "fieldtype": "Table MultiSelect",
-   "hidden": 1,
-   "label": "Warehouses",
-   "options": "Production Plan Material Request Warehouse",
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
+   "columns": 2,
+   "fieldname": "warehouse",
    "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Production Sheet",
-   "print_hide": 1,
-   "read_only": 1
+   "in_list_view": 1,
+   "label": "For Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "columns": 2,
+   "fieldname": "produced_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Produced Qty"
+  },
+  {
+   "columns": 2,
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks"
   }
  ],
- "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-04-01 19:17:27.237728",
+ "modified": "2021-04-01 11:30:04.339728",
  "modified_by": "Administrator",
- "module": "Pcpl",
+ "module": "Scap1",
  "name": "Production Sheet Item",
  "owner": "Administrator",
  "permissions": [],
