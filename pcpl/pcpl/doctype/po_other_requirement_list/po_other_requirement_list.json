@@ -1,0 +1,32 @@
+{
+ "actions": [],
+ "creation": "2021-03-23 16:11:03.638779",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "po_other_req_list"
+ ],
+ "fields": [
+  {
+   "fieldname": "po_other_req_list",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "PO Other Requirements List",
+   "options": "PO Other Requirements"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-04-04 01:01:41.695388",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "PO Other Requirement List",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
