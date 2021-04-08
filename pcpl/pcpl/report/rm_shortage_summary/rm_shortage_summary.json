@@ -12,11 +12,11 @@
  "modified": "2021-04-06 08:48:24.215638",
  "modified_by": "Administrator",
  "module": "Pcpl",
- "name": "RM Shortage Summary",
+ "name": "RM PM Shortage Report",
  "owner": "Administrator",
  "prepared_report": 0,
  "ref_doctype": "Item",
- "report_name": "RM Shortage Summary",
+ "report_name": "RM PM Shortage Report",
  "report_type": "Script Report",
  "roles": [
   {
