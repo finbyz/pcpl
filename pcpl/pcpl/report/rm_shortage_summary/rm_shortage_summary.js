@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["RM Shortage Summary"] = {
+frappe.query_reports["RMPM Shortage Report"] = {
 	"filters": [
 		{
 			"fieldname":"company",
@@ -27,6 +27,12 @@ frappe.query_reports["RM Shortage Summary"] = {
 					query: "erpnext.controllers.queries.item_query"
 				}
 			}
+		},
+		{
+			"fieldname":"parent_item_group",
+			"label": __("Parent Item Group"),
+			"fieldtype": "Link",
+			"options": "Item Group"
 		},
 		{
 			"fieldname":"item_group",
