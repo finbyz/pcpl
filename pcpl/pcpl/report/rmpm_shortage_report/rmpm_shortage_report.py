@@ -1,5 +1,13 @@
-# Copyright (c) 2013, STPL and contributors
+# Copyright (c) 2013, sprics and contributors
 # For license information, please see license.txt
+
+#from __future__ import unicode_literals
+# import frappe
+
+#def execute(filters=None):
+#	columns, data = [], []
+#	return columns, data
+
 
 from __future__ import unicode_literals
 import frappe
@@ -48,13 +56,12 @@ def execute(filters=None):
 				re_order_qty = d.warehouse_reorder_qty
 
 		shortage_qty = 0
-		if (re_order_level or re_order_qty) and re_order_level > bin.projected_qty:
+		if (re_order_level or re_order_qty) and bin.actual_qty:
 			shortage_qty = bin.actual_qty - re_order_level
 			
 
-		data.append([item.parent_item_group, item.item_group, item.name, item.item_name, item.stock_uom, bin.actual_qty, re_order_level,
-			     shortage_qty, bin.ordered_qty, bin.projected_qty, re_order_qty,
-			     bin.warehouse])
+		data.append([item.parent_item_group, item.item_group, item.name, item.item_name, bin.actual_qty, shortage_qty, bin.ordered_qty,
+			bin.projected_qty, re_order_level, re_order_qty, bin.warehouse])
 
 		if include_uom:
 			conversion_factors.append(item.conversion_factor)
@@ -69,12 +76,11 @@ def get_columns():
 		{"label": _("Item Group"), "fieldname": "item_group", "fieldtype": "Link", "options": "Item Group", "width": 200},
 		{"label": _("Item Code"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 200},
 		{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 250},
-		{"label": _("UOM"), "fieldname": "stock_uom", "fieldtype": "Link", "options": "UOM", "width": 70},
 		{"label": _("Actual Qty"), "fieldname": "actual_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
 		{"label": _("Shortage Qty"), "fieldname": "shortage_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
 		{"label": _("Ordered Qty"), "fieldname": "ordered_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Reorder Level"), "fieldname": "re_order_level", "fieldtype": "Float", "width": 100, "convertible": "qty"},
 		{"label": _("Projected Qty"), "fieldname": "projected_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
+		{"label": _("Reorder Level"), "fieldname": "re_order_level", "fieldtype": "Float", "width": 100, "convertible": "qty"},
 		{"label": _("Reorder Qty"), "fieldname": "re_order_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
 		{"label": _("Warehouse"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 200}
 		
@@ -121,7 +127,8 @@ def get_item_map(item_code, include_uom):
 		and item.disabled=0
 		{condition}
 		and (item.end_of_life > %(today)s or item.end_of_life is null or item.end_of_life='0000-00-00')
-		and exists (select name from `tabBin` bin where bin.item_code=item.name)"""\
+		and exists (select name from `tabBin` bin where bin.item_code=item.name)
+		ORDER BY item.parent_item_group ASC"""\
 		.format(cf_field=cf_field, cf_join=cf_join, condition=condition),
 		{"today": today(), "include_uom": include_uom}, as_dict=True)
 
