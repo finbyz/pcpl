@@ -102,8 +102,7 @@ def get_bin_list(filters):
 
 	bin_list = frappe.db.sql("""select item_code, warehouse, actual_qty, planned_qty, indented_qty,
 		ordered_qty, reserved_qty, reserved_qty_for_production, reserved_qty_for_sub_contract, projected_qty
-		from tabBin bin {conditions} order by item_code, warehouse
-		""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
+		from tabBin bin {conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
 
 	return bin_list
 
