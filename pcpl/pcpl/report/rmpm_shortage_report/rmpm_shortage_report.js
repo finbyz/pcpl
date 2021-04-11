@@ -15,7 +15,8 @@ frappe.query_reports["RMPM Shortage Report"] = {
 			"fieldname":"warehouse",
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
-			"options": "Warehouse"
+			"options": "Warehouse",
+			"default": "Other WH - PC"
 		},
 		{
 			"fieldname":"item_code",
