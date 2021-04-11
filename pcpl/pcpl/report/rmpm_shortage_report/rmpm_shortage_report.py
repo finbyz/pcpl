@@ -127,7 +127,7 @@ def get_item_map(item_code, include_uom):
 		{condition}
 		and (item.end_of_life > %(today)s or item.end_of_life is null or item.end_of_life='0000-00-00')
 		and exists (select name from `tabBin` bin where bin.item_code=item.name)
-		ORDER BY item.item_group ASC"""\
+		ORDER BY item.item_group ASC"""
 		.format(cf_field=cf_field, cf_join=cf_join, condition=condition),
 		{"today": today(), "include_uom": include_uom}, as_dict=True)
 
