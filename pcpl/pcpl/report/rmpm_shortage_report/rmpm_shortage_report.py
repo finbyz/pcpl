@@ -124,7 +124,7 @@ def get_item_map(item_code, include_uom):
 		{cf_join}
 		where item.is_stock_item = 1
 		and item.disabled=0
-		and item.item_group LIKE '%%(F)%%' or item.item_group LIKE '%%(R)%%' or item.item_group LIKE '%%Packing Material%%' or item.item_group LIKE '%%Raw Material%%'
+		and item.item_group LIKE '%%(P)%%' or item.item_group LIKE '%%(R)%%' or item.item_group LIKE '%%Packing Material%%' or item.item_group LIKE '%%Raw Material%%'
 		{condition}
 		and (item.end_of_life > %(today)s or item.end_of_life is null or item.end_of_life='0000-00-00')
 		and exists (select name from `tabBin` bin where bin.item_code=item.name)
