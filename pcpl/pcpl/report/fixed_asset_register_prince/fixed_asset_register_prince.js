@@ -80,7 +80,7 @@ frappe.query_reports["Fixed Asset Register Prince"] = {
 			label: __("Finance Book"),
 			fieldtype: "Link",
 			options: "Finance Book",
-			default: "Prince Care",
+			default: "Prince Care"
 		},
 		{
 			fieldname:"cost_center",
