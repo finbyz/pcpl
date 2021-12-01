@@ -94,7 +94,7 @@ def get_data(filters):
 			"location": asset.location,
 			"asset_category": asset.asset_category,
 			"purchase_date": asset.purchase_date,
-			"asset_value": asset.gross_purchase_amount - flt(depreciation_amount_map.get(asset.asset_id))
+			"asset_value": asset.gross_purchase_amount - flt(depreciation_amount_map.get(asset.name))
 		}
 		data.append(row)
 
