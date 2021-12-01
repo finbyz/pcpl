@@ -80,7 +80,6 @@ def get_data(filters):
 		assets_record = frappe.db.get_all("Asset", filters=conditions, fields=fields)
 
 	for asset in assets_record:
-		asset_value = asset.gross_purchase_amount - flt(asset.opening_accumulated_depreciation) - flt(depreciation_amount_map.get(asset.name))
 		row = {
 			"asset_id": asset.asset_id,
 			"asset_name": asset.asset_name,
@@ -95,7 +94,7 @@ def get_data(filters):
 			"location": asset.location,
 			"asset_category": asset.asset_category,
 			"purchase_date": asset.purchase_date,
-			"asset_value": asset_value
+			"asset_value": asset.gross_purchase_amount - flt(asset.depreciated_amount)
 		}
 		data.append(row)
 
