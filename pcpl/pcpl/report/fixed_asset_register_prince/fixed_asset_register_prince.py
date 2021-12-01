@@ -94,7 +94,7 @@ def get_data(filters):
 			"location": asset.location,
 			"asset_category": asset.asset_category,
 			"purchase_date": asset.purchase_date,
-			"asset_value": flt(asset.gross_purchase_amount) - flt(asset.depreciated_amount) + flt(500)
+			"asset_value": asset.gross_purchase_amount - flt(asset.depreciated_amount) + 500
 		}
 		data.append(row)
 
