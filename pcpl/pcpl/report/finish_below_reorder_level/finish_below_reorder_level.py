@@ -1,13 +1,4 @@
-# Copyright (c) 2013, sprics and contributors
-# For license information, please see license.txt
-
-#from __future__ import unicode_literals
-# import frappe
-
-#def execute(filters=None):
-#	columns, data = [], []
-#	return columns, data
-
+#PrinceCare finish_below_reorder_level report
 
 from __future__ import unicode_literals
 import frappe
@@ -34,8 +25,8 @@ def execute(filters=None):
 			continue
 
 		# item = item_map.setdefault(bin.item_code, get_item(bin.item_code))
-		company = warehouse_company.setdefault(bin.warehouse,
-			frappe.db.get_value("Warehouse", bin.warehouse, "company"))
+		# company = warehouse_company.setdefault(bin.warehouse,
+		# 	frappe.db.get_value("Warehouse", bin.warehouse, "company"))
 
 		if filters.brand and filters.brand != item.brand:
 			continue
@@ -45,24 +36,22 @@ def execute(filters=None):
 		elif filters.parent_item_group and filters.parent_item_group != item.parent_item_group:
 			continue	
 
-		elif filters.company and filters.company != company:
-			continue
+		# elif filters.company and filters.company != company:
+		# 	continue
 
 		re_order_level = re_order_qty = 0
 
 		for d in item.get("reorder_levels"):
-			if d.warehouse == bin.warehouse:
-				re_order_level = d.warehouse_reorder_level
-				re_order_qty = d.warehouse_reorder_qty
+			re_order_level += d.warehouse_reorder_level
+			re_order_qty += d.warehouse_reorder_qty
 
 		shortage_qty = 0
 		if (re_order_level or re_order_qty) and bin.actual_qty:
 			shortage_qty = bin.actual_qty - re_order_level
 			
-		pending_po_qty = flt(re_order_level) - flt(bin.actual_qty)
+		pending_so_qty = flt(re_order_level) - flt(bin.actual_qty)
 		
-		data.append([item.parent_item_group, item.item_group, item.name, item.item_name, bin.actual_qty, shortage_qty, bin.ordered_qty,
-			bin.projected_qty,re_order_level, pending_po_qty, re_order_qty, bin.warehouse])
+		data.append([item.parent_item_group, item.item_group, item.name, item.item_name, bin.actual_qty, re_order_level, pending_so_qty, bin.reserved_qty, re_order_qty])
 
 		if include_uom:
 			conversion_factors.append(item.conversion_factor)
@@ -77,15 +66,12 @@ def get_columns():
 		{"label": _("Item Group"), "fieldname": "item_group", "fieldtype": "Link", "options": "Item Group", "width": 200},
 		{"label": _("Item Code"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 200},
 		{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 250},
-		{"label": _("Actual Qty"), "fieldname": "actual_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Shortage Qty"), "fieldname": "shortage_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Ordered Qty"), "fieldname": "ordered_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Projected Qty"), "fieldname": "projected_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Reorder Level"), "fieldname": "re_order_level", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Pending PO Qty"), "fieldname": "pending_po_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Reorder Qty"), "fieldname": "re_order_qty", "fieldtype": "Float", "width": 100, "convertible": "qty"},
-		{"label": _("Warehouse"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 200}
-		
+		{"label": _("Current Stock Qty"), "fieldname": "actual_qty", "fieldtype": "Float", "width": 150, "convertible": "qty"},
+		{"label": _("Reorder Level"), "fieldname": "re_order_level", "fieldtype": "Float", "width": 130, "convertible": "qty"},
+		{"label": _("Qty to be Order"), "fieldname": "pending_so_qty", "fieldtype": "Float", "width": 150, "convertible": "qty"},
+		{"label": _("Pending PO Qty"), "fieldname": "reserved_qty", "fieldtype": "Float", "width": 140, "convertible": "qty"},
+		{"label": _("Reorder Qty"), "fieldname": "re_order_qty", "fieldtype": "Float", "width": 130, "convertible": "qty"},
+		# {"label": _("Warehouse"), "fieldname": "warehouse", "fieldtype": "Link", "options": "Warehouse", "width": 200}
 	]
 
 def get_bin_list(filters):
@@ -102,9 +88,10 @@ def get_bin_list(filters):
 				where wh.lft >= %s and wh.rgt <= %s and bin.warehouse = wh.name)"%(warehouse_details.lft,
 				warehouse_details.rgt))
 
-	bin_list = frappe.db.sql("""select item_code, warehouse, actual_qty, planned_qty, indented_qty,
-		ordered_qty, reserved_qty, reserved_qty_for_production, reserved_qty_for_sub_contract, projected_qty
-		from tabBin bin {conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
+	bin_list = frappe.db.sql("""select item_code, sum(actual_qty) as actual_qty, sum(planned_qty) as planned_qty, sum(indented_qty) as indented_qty, 
+		sum(ordered_qty) as ordered_qty, sum(ordered_qty) as reserved_qty, sum(reserved_qty_for_production) as reserved_qty_for_production,
+		sum(reserved_qty_for_sub_contract) as reserved_qty_for_sub_contract, sum(projected_qty) as projected_qty
+		from tabBin bin {conditions} group by item_code""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
 
 	return bin_list
 
@@ -125,8 +112,8 @@ def get_item_map(item_code, include_uom):
 		from `tabItem` item
 		{cf_join}
 		join `tabItem Group` as ig on ig.name = item.parent_item_group
-		where item.is_stock_item = 1 and ig.old_parent != "10000 Finish goods (F)"
-		and item.disabled=0
+		where item.is_stock_item = 1
+		and item.disabled=0 and ig.old_parent = "10000 Finish goods (F)"
 		{condition}
 		and (item.end_of_life > %(today)s or item.end_of_life is null or item.end_of_life='0000-00-00')
 		and exists (select name from `tabBin` bin where bin.item_code=item.name)

@@ -1,0 +1,23 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2022-06-14 15:46:53.399321",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2022-06-15 13:23:33.618746",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "BOM Item Costing Prince",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "",
+ "ref_doctype": "BOM",
+ "report_name": "BOM Item Costing Prince",
+ "report_type": "Script Report",
+ "roles": []
+}

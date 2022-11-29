@@ -1,0 +1,22 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2022-06-08 12:41:49.755650",
+ "disable_prepared_report": 1,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2022-06-09 10:28:32.984995",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "Finished Stock with price list",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Stock Ledger Entry",
+ "report_name": "Finished Stock with price list",
+ "report_type": "Script Report",
+ "roles": []
+}

@@ -1,0 +1,32 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2022-06-06 14:09:09.740083",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2022-06-06 14:49:12.048838",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "BOM Stock Report Princecare",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "BOM",
+ "report_name": "BOM Stock Report Princecare",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Manufacturing Manager"
+  },
+  {
+   "role": "Manufacturing User"
+  },
+  {
+   "role": "Data Import/Export"
+  }
+ ]
+}

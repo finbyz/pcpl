@@ -13,7 +13,10 @@ app_license = "MIT"
 
 # Includes in <head>
 # ------------------
-
+app_include_js = [
+	"/assets/js/pcpl.min.js",
+	#"assets/finbyzerp/js/frappe/ui/page.js"
+]
 # include js, css files in header of desk.html
 # app_include_css = "/assets/pcpl/css/pcpl.css"
 # app_include_js = "/assets/pcpl/js/pcpl.js"
@@ -35,7 +38,12 @@ app_license = "MIT"
 # include js in doctype views
 doctype_js = {
     "Purchase Invoice" : "public/js/purchase_invoice.js",
-    "Sales Invoice" : "public/js/sales_invoice.js"
+    "Sales Invoice" : "public/js/sales_invoice.js",
+    "Sales Order" : "public/js/sales_order.js",
+    "Delivery Note" : "public/js/delivery_note.js",
+    "Journal Entry" : "public/js/journal_entry.js",
+    "Stock Entry" : "public/js/stock_entry.js"
+    
     }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -101,10 +109,15 @@ doc_events = {
 	# 	"on_trash": "method"
 	# }
     "Sales Invoice": {
-        "before_save": "pcpl.pcpl.doc_events.sales_invoice.before_save"
+        "before_save": "pcpl.pcpl.doc_events.sales_invoice.before_save",
+        "before_submit": "pcpl.pcpl.doc_events.sales_invoice.before_submit",
+        "validate": "pcpl.pcpl.doc_events.sales_invoice.validate"
     },
     "Purchase Invoice": {
         "before_save": "pcpl.pcpl.doc_events.purchase_invoice.before_save"
+    },
+    "Sales Secondary":{
+        "before_naming": "finbyzerp.api.before_naming",
     }
 }
 
@@ -152,3 +165,11 @@ doc_events = {
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
 
+
+from pcpl.pcpl.report.trial_balance_for_party import execute as trial_balance_for_party_execute
+from erpnext.accounts.report.trial_balance_for_party import trial_balance_for_party
+trial_balance_for_party.execute = trial_balance_for_party_execute
+
+from pcpl.pcpl.doc_events import sales_invoice
+from finbyzerp.e_invoice_override import validate_einvoice_fields as vef
+sales_invoice.validate_einvoice_fields = vef
