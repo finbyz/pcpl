@@ -1,7 +1,5 @@
 {
 	"js/pcpl.min.js": [
-		"public/js/trial_balance_for_party.js",
-		"public/js/delivery_note.js",
-		"public/js/sales_invoice.js"
+		"public/js/trial_balance_for_party.js"
     ]
 }

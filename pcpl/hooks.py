@@ -173,3 +173,7 @@ trial_balance_for_party.execute = trial_balance_for_party_execute
 from pcpl.pcpl.doc_events import sales_invoice
 from finbyzerp.e_invoice_override import validate_einvoice_fields as vef
 sales_invoice.validate_einvoice_fields = vef
+
+from pcpl.api import get_delivery_notes_to_be_billed as api_get_delivery_notes_to_be_billed
+from erpnext.controllers import queries
+queries.get_delivery_notes_to_be_billed = api_get_delivery_notes_to_be_billed

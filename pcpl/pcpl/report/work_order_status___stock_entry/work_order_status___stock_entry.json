@@ -1,0 +1,44 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2022-11-30 17:19:07.755257",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "Prince Letter Head For Report",
+ "modified": "2022-12-01 16:25:03.532027",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "Work Order Status - Stock Entry",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "Select\nse.`name`as \"Stock Entry No.:Link/Stock Entry:120\",\nse.`posting_date` as \"Date:Date:120\",\nsed.`item_name` as \"Item Name:Data:120\",\nsed.`t_warehouse` as \"Target Warhouse:Link/Warehouse:120\",\nsed.`s_warehouse` as \"Source Warhouse:Link/Warehouse:120\",\nsed.`qty` as \"Quantity:Float:120\"\n\nFrom \n`tabStock Entry` as se\nleft join `tabStock Entry Detail` as sed ON sed.parent = se.name\n\nWhere \nse.stock_entry_type = 'Manufacture' and sed.is_finished_item = '1'",
+ "ref_doctype": "Stock Entry",
+ "report_name": "Work Order Status - Stock Entry",
+ "report_script": "frappe.query_reports= = {\r\n\"filters\": [\r\n\t\t{\r\n\t\t\t\"fieldname\": \"company\",\r\n\t\t\t\"label\": __(\"Company\"),\r\n\t\t\t\"fieldtype\": \"Link\",\r\n\t\t\t\"width\": \"80\",\r\n\t\t\t\"options\": \"Company\",\r\n\t\t\t\"default\": frappe.defaults.get_default(\"company\")\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"fieldname\": \"from_date\",\r\n\t\t\t\"label\": __(\"From Date\"),\r\n\t\t\t\"fieldtype\": \"Date\",\r\n\t\t\t\"width\": \"80\",\r\n\t\t\t\"reqd\": 1,\r\n\t\t\t\"default\": frappe.datetime.add_months(frappe.datetime.get_today(), -1),\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"fieldname\": \"to_date\",\r\n\t\t\t\"label\": __(\"To Date\"),\r\n\t\t\t\"fieldtype\": \"Date\",\r\n\t\t\t\"width\": \"80\",\r\n\t\t\t\"reqd\": 1,\r\n\t\t\t\"default\": frappe.datetime.get_today()\r\n\t\t}\r\n\t]\r\n};",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Manufacturing User"
+  },
+  {
+   "role": "Stock Manager"
+  },
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Manufacturing Manager"
+  },
+  {
+   "role": "Export"
+  },
+  {
+   "role": "PCD"
+  }
+ ]
+}
