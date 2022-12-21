@@ -780,7 +780,7 @@ def get_period_date_ranges(period, fiscal_year=None, year_start_date=None, year_
 			period_date_ranges.append([year_start_date, period_end_date])
 			year_start_date = period_end_date + relativedelta(days=1)
 			if period_end_date == year_end_date:
-				breaks
+				break
 
 	return period_date_ranges
 

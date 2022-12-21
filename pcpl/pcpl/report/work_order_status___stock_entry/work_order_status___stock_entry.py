@@ -25,6 +25,7 @@ def get_data(filters):
 			se.`name`as stock_entry_no ,
 			se.`posting_date` as date,
 			sed.`item_name` as item_name,
+			sed.item_code,
 			sed.`t_warehouse` as target_warhouse,
 			sed.`s_warehouse` as source_warhouse,
 			sed.`qty` as qty,
@@ -42,8 +43,31 @@ def get_data(filters):
 			row.update({'status':'Draft'})
 		if row.status == 1:
 			row.update({'status':'Submitted'})
+	# for row in data:
+	qty_in_case_list=frappe.db.sql(f"""Select
+		item_code,qty_in_case
+	from
+		`tabItem`
+	""",as_dict = True)
+	qty_in_case_dict={}
+	for row in qty_in_case_list:
+		qty_in_case_dict[row.item_code]=row
+	for row in data:
+		if qty_in_case_dict.get(row.item_code):
+			if row.get('item_code') == qty_in_case_dict[row.item_code].get('item_code'):
+				if qty_in_case_dict[row.item_code].get('qty_in_case'):
+					row.update({"qty_in_case":row.get('qty')/qty_in_case_dict[row.item_code].get('qty_in_case')})
+			
+	# if frappe.session.user == "Administrator":
+		# frappe.msgprint(str(qty_in_case_list))
+		# for row in data:
+		# 	frappe.msgprint(str(qty_in_case_dict[row.item_name].get('qty_in_case')))
+		# frappe.msgprint(str(data))
+			
 	return data
 
+	
+		
 
 def get_columns(filters):
 	columns = [
@@ -83,6 +107,12 @@ def get_columns(filters):
 		{
 			"label": _("Quantity"),
 			"fieldname": "qty",
+			"fieldtype": "Float",
+			"width": 120
+		},
+		{
+			"label": _("Qty In Case"),
+			"fieldname": "qty_in_case",
 			"fieldtype": "Float",
 			"width": 120
 		},

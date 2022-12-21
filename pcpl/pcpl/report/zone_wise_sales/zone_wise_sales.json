@@ -9,8 +9,8 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2022-10-05 12:11:37.735421",
- "modified_by": "kamlesh@princesupplico.com",
+ "modified": "2022-12-14 18:21:30.268937",
+ "modified_by": "suresh@princecareindia.com",
  "module": "Pcpl",
  "name": "Zone Wise Sales",
  "owner": "suresh@princecareindia.com",
@@ -21,13 +21,13 @@
  "report_type": "Script Report",
  "roles": [
   {
-   "role": "Accounts Manager"
+   "role": "PC Creat Entry Accounts"
   },
   {
-   "role": "Accounts User"
+   "role": "PC Check Entry Accounts"
   },
   {
-   "role": "PS Sales Support"
+   "role": "Sales User"
   }
  ]
 }
