@@ -48,26 +48,7 @@ def prepare_tarretory_data():
     return target_data
 
 def gross_sales_data(filters ):
-    columns=[
-        {
-				"label": "Zone",
-				"fieldname": "zone",
-				"fieldtype": "Data",
-				"width": 150
-				},
-                {
-				"label": "Target Amount",
-				"fieldname": "target_amount",
-				"fieldtype": "Data",
-				"width": 150
-				},
-                {
-				"label": "Parent Territory",
-				"fieldname": "parent_territory",
-				"fieldtype": "Data",
-				"width": 150
-				},
-    ]
+    
     mon_dict = {
         'January':1,'February':2,'March':3,'April':4,'May':5,'June':6,'July':7,'August':8,'September':9,'Octomber':10,'November':11,'December':12
     }
@@ -75,10 +56,10 @@ def gross_sales_data(filters ):
     if filters.get('month'):
         month = mon_dict.get(filters.get('month'))
     import datetime
-
+    
     today = datetime.date.today()
 
-    year = today.strftime("%Y")
+    year = filters.get('year')
 
     import calendar
 
@@ -146,39 +127,8 @@ def gross_sales_data(filters ):
             duplicate_row.update({'{}-to-{}sales_return_draft'.format(d.get('period_start_date') , d.get('period_end_date')):sum(d.get('qty') * d.get('rate') for d in sales_return_draft) if sales_return_draft else 0})
             duplicate_row.update({'{}-to-{}ns'.format(d.get('period_start_date') , d.get('period_end_date')):(sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0) - sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0})
             duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):(((sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0) - sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0)/row.target_amount) if row.get('target_amount') else 0})
-            columns += [
-				{
-				"label": _("{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'Gross Sales')),
-				"fieldname": "{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'gross_sales'),
-				"fieldtype": "Data",
-				"width": 150
-				},
-                {
-				"label": _("{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'Sales Return')),
-				"fieldname": "{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'sales_return'),
-				"fieldtype": "Data",
-				"width": 150
-				},
-				{
-				"label": _("{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'Sales Return Draft')),
-				"fieldname": "{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'sales_return_draft'),
-				"fieldtype": "Data",
-				"width": 150
-				},
-                {
-				"label": _("{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'NS')),
-				"fieldname": "{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'ns'),
-				"fieldtype": "Data",
-				"width": 150
-				},
-                {
-				"label": _("{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'ACH%')),
-				"fieldname": "{}-to-{}{}".format(d.get('period_start_date') , d.get('period_end_date'),'ach'),
-				"fieldtype": "Data",
-				"width": 150
-				},
-			]
-            print(duplicate_row)
+    
+       
 
             if duplicate_row:
                 if not final_data.get((row.get('parent_territory'),row.get('zone'))):
@@ -186,9 +136,63 @@ def gross_sales_data(filters ):
 
 
                 final_data[(row.get('parent_territory'),row.get('zone'))].update(duplicate_row)
-
-            
-    return list(final_data.values()) , columns
+    
+    columns=[
+        {
+				"label": "Zone",
+				"fieldname": "zone",
+				"fieldtype": "Data",
+				"width": 150
+				},
+                {
+				"label": "Target Amount",
+				"fieldname": "target_amount",
+				"fieldtype": "Data",
+				"width": 150
+				},
+                {
+				"label": "Parent Territory",
+				"fieldname": "parent_territory",
+				"fieldtype": "Data",
+				"width": 150
+				},
+    ]
+    # print(period_date_ranges)
+    for row in period_date_ranges:
+        columns += [
+        {
+        "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'GS')),
+        "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'gross_sales'),
+        "fieldtype": "Data",
+        "width": 200
+        },
+        {
+        "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'CN')),
+        "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'sales_return'),
+        "fieldtype": "Data",
+        "width": 200
+        },
+        {
+        "label": _("{}-to-{}<br>{}".format(row.get('period_start_date') , row.get('period_end_date'),'TCN')),
+        "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'sales_return_draft'),
+        "fieldtype": "Data",
+        "width": 200
+        },
+        {
+        "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'NS')),
+        "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'ns'),
+        "fieldtype": "Data",
+        "width": 200
+        },
+        {
+        "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'ACH%')),
+        "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'ach'),
+        "fieldtype": "Data",
+        "width": 200
+        },
+    ]
+    return list(final_data.values()) , columns      
+    # return columns
 
 
 def weeks_between(start_date, end_date):
