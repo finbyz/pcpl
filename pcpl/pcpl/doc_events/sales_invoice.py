@@ -7,6 +7,13 @@ def validate(self, method):
 			if not row.free_item_pricelist_rate or row.free_item_pricelist_rate == 0:
 				row.free_item_pricelist_rate = get_price_list_rate_for(row.item_code,self.selling_price_list,row.uom,self.posting_date)
 	
+	if self.territory:
+		territory_doc = frappe.get_doc('Territory' , self.territory)
+		if territory_doc.parent_territory:
+			zone = frappe.db.get_value('Territory' , territory_doc.parent_territory , 'parent_territory')
+			if zone:
+				self.zone = zone
+
 	if(self.naming_series != 'SI-O-2223-.####'):
 		if(self.invoice_for_free_item == 1):
 			for i in self.items:

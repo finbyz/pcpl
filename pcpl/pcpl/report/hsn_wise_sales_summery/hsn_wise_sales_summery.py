@@ -12,7 +12,8 @@ from six import iteritems
 
 import erpnext
 from erpnext.regional.india.utils import get_gst_accounts
-from erpnext.regional.report.gstr_1.gstr_1 import get_company_gstin_number
+from india_compliance.gst_india.utils import 
+from india_compliance.gst_india.report.gstr_1.gstr_1 import get_company_gstin_number
 
 def execute(filters=None):
 	return _execute(filters)
@@ -334,7 +335,7 @@ def download_json_file():
 def get_hsn_wise_json_data(filters, report_data):
 
 	filters = frappe._dict(filters)
-	gst_accounts = get_gst_accounts(filters.company)
+	gst_accounts = get_company_gstin_number(filters.company)
 	data = []
 	count = 1
 

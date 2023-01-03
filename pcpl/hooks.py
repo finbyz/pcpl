@@ -14,7 +14,7 @@ app_license = "MIT"
 # Includes in <head>
 # ------------------
 app_include_js = [
-	"/assets/js/pcpl.min.js",
+	"pcpl.bundle.js",
 	#"assets/finbyzerp/js/frappe/ui/page.js"
 ]
 # include js, css files in header of desk.html

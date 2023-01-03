@@ -49,7 +49,7 @@ def get_data(columns, filters):
 			LEFT JOIN `tabBin` AS ledger ON bom_item.item_code = ledger.item_code
 		WHERE
 			bom_item.parenttype = 'BOM'
-			and bom.name = '{name}'
+			and bom.name = REPLACE("{name}", "'", "\'")
 			and bom.docstatus < 2
 			and bom.is_default = 1
 		GROUP BY

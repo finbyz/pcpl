@@ -63,7 +63,7 @@ frappe.ui.form.on('Sales Secondary Item', {
 	
 	item_code: function(frm,cdt,cdn){
 		var d = locals[cdt][cdn];
-		console.log('hello')
+		
 		if(d.item_code && frm.doc.selling_price_list && frm.doc.secondary_party && frm.doc.posting_date){
 			frm.call({
 				method: 'pcpl.pcpl.doctype.sales_secondary.sales_secondary.get_price_list_rate_for',
