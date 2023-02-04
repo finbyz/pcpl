@@ -105,6 +105,8 @@ frappe.ui.form.on("Sales Invoice", {
                 }
             }
         })
+        if(frm.doc.naming_series=="SIA-2223-.####")
+            frm.set_value("income_account","Sales Allopathic - PC")
     }
 })
 
@@ -145,6 +147,6 @@ frappe.ui.form.on('Sales Invoice Item',{
        if(doc.free_item == 1){
           frappe.model.set_value(cdt, cdn, 'price_list_rate', 0);
        }
-       }
+    }
 })
 

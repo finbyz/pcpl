@@ -41,5 +41,12 @@ frappe.query_reports["Monthly Free Aritcle Scheme"] = {
 			"options": "Item",
 			"width": "80"
 		},
+		{
+			"fieldname": "item_group",
+			"label": __("Item Group"),
+			"fieldtype": "Link",
+			"options": "Item Group",
+			"width": "80"
+		},
 	]
 };

@@ -148,16 +148,16 @@ def gross_sales_data(filters ):
             duplicate_row.update(row)
             duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
 
-            duplicate_row.update({'{}-to-{}sales_return'.format(d.get('period_start_date') , d.get('period_end_date')):abs(sum(d.get('qty') * d.get('rate') for d in sales_return)) if sales_return else 0})
+            duplicate_row.update({'{}-to-{}sales_return'.format(d.get('period_start_date') , d.get('period_end_date')):(sum(d.get('qty') * d.get('rate') for d in sales_return)) if sales_return else 0})
             
             duplicate_row.update({'{}-to-{}sales_return_draft'.format(d.get('period_start_date') , d.get('period_end_date')):sum(d.get('qty') * d.get('rate') for d in sales_return_draft) if sales_return_draft else 0})
-            NS = (sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0) - (sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0)
+            NS = (sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0) + (sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0)
             duplicate_row.update({'{}-to-{}ns'.format(d.get('period_start_date') , d.get('period_end_date')):NS})
             ach = (NS / row.get('target_amount')) if row.get('target_amount') else 0
             duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):ach})
             gs = sum(d.get('qty') * d.get('rate') for d in gross_sales)
             if len(gross_sales) > 0:
-                duplicate_row.update({'{}-to-{}cnp'.format(d.get('period_start_date') , d.get('period_end_date')):abs((((sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0) - (sum(d.get('qty') * d.get('rate') for d in sales_return_draft) if sales_return_draft else 0))/gs)) if gs != 0 else 0 })
+                duplicate_row.update({'{}-to-{}cnp'.format(d.get('period_start_date') , d.get('period_end_date')):((((sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0) + (sum(d.get('qty') * d.get('rate') for d in sales_return_draft) if sales_return_draft else 0))/gs)) if gs != 0 else 0 })
             else:
                 duplicate_row.update({'{}-to-{}cnp'.format(d.get('period_start_date') , d.get('period_end_date')):0})
             if duplicate_row:

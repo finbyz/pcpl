@@ -35,3 +35,11 @@ def get_delivery_notes_to_be_billed(doctype, txt, searchfield, start, page_len, 
 		{"txt": ("%%%s%%" % txt)},
 		as_dict=as_dict,
 	)
+
+@frappe.whitelist()
+def get_sales_tax_template(tax_category, company):
+	return frappe.db.get_value("Sales Taxes and Charges Template", {'tax_category' : tax_category, 'company': company, 'disabled': 0}, 'name')
+
+def set_sales_taxes_and_charges(self, method):
+	if self.tax_category and not self.taxes_and_charges:
+		self.taxes_and_charges = get_sales_tax_template(self.tax_category, self.company)

@@ -118,6 +118,10 @@ doc_events = {
     },
     "Sales Secondary":{
         "before_naming": "finbyzerp.api.before_naming",
+    },
+    "Sales Order":{
+        "before_validate": "pcpl.api.set_sales_taxes_and_charges",
+        "before_validate":"pcpl.pcpl.doc_events.sales_order.before_validate"
     }
 }
 

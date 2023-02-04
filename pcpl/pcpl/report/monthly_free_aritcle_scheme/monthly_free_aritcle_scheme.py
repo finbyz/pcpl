@@ -39,6 +39,12 @@ def get_columns(filters):
 			"width": 200
 		},
 		{
+			"label": _("Item Group"),
+			"fieldname": "item_group",
+			"fieldtype": "Data",
+			"width": 200
+		},
+		{
 			"label": _("Rate"),
 			"fieldname":"rate",
 			"fieldtype": "Currency", 
@@ -63,7 +69,10 @@ def get_data(filters):
 	condition = ''
 	if filters.get("item_code"):
 		condition += f" and sii.item_code = '{filters.get('item_code')}'"
-	
+
+	if filters.get("item_group"):
+		condition += f" and sii.item_group = '{filters.get('item_group')}'"
+
 	if filters.get("sales_scheme"):
 		condition += f" and sii.sales_scheme = '{filters.get('sales_scheme')}'"
 	if filters.get("customer"):
@@ -71,7 +80,7 @@ def get_data(filters):
 
 	data = frappe.db.sql("""
 	SELECT 
-			si.invoice_no as sales_invoice_no,sii.sales_scheme as sales_scheme,si.customer,sii.item_name as product,sii.free_item_pricelist_rate as rate,sii.qty as qty,(sii.free_item_pricelist_rate*sii.qty) as amount
+			si.invoice_no as sales_invoice_no,sii.sales_scheme as sales_scheme,si.customer,sii.item_name as product,sii.item_group,sii.free_item_pricelist_rate as rate,sii.qty as qty,(sii.free_item_pricelist_rate*sii.qty) as amount
 
 	FROM
 			`tabSales Invoice` si

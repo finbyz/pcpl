@@ -10,7 +10,7 @@ from frappe import _
 from frappe.utils import flt, formatdate, getdate
 from six import iteritems
 
-from erpnext.regional.india.utils import get_gst_accounts
+from india_compliance.gst_india.utils import get_gst_accounts_by_type
 
 
 def execute(filters=None):
@@ -32,12 +32,12 @@ class Gstr1Report(object):
 			COALESCE(NULLIF(customer_gstin,''), NULLIF(billing_address_gstin, '')) as customer_gstin,
 			place_of_supply,
 			ecommerce_gstin,
-			reverse_charge,
+			is_reverse_charge as reverse_charge,
 			return_against,
 			is_return,
 			is_debit_note,
 			gst_category,
-			export_type,
+			is_export_with_gst as export_type,
 			port_code,
 			shipping_bill_number,
 			shipping_bill_date,
@@ -47,7 +47,7 @@ class Gstr1Report(object):
 
 	def run(self):
 		self.get_columns()
-		self.gst_accounts = get_gst_accounts(self.filters.company, only_non_reverse_charge=1)
+		self.gst_accounts = get_gst_accounts_by_type(self.filters.company,"Output")
 		self.get_invoice_data()
 
 		if self.invoices:
@@ -355,7 +355,7 @@ class Gstr1Report(object):
 		unidentified_gst_accounts = []
 		unidentified_gst_accounts_invoice = []
 		for parent, account, item_wise_tax_detail, tax_amount in self.tax_details:
-			if account in self.gst_accounts.cess_account:
+			if account == self.gst_accounts.cess_account:
 				self.invoice_cess.setdefault(parent, tax_amount)
 			else:
 				if item_wise_tax_detail:

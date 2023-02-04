@@ -57,12 +57,13 @@ def execute(filters=None):
 
 		shortage_qty = 0
 		if (re_order_level or re_order_qty) and bin.actual_qty:
-			shortage_qty = bin.actual_qty - re_order_level
-			
+			shortage_qty = bin.actual_qty - re_order_level	
 		pending_po_qty = flt(re_order_level) - flt(bin.actual_qty)
-		
-		data.append([item.parent_item_group, item.item_group, item.name, item.item_name, bin.actual_qty, shortage_qty, bin.ordered_qty,
-			bin.projected_qty,re_order_level, pending_po_qty, re_order_qty, bin.warehouse])
+		if filters.show_nagative_shortage_qty == 1:
+			if shortage_qty < 0.0:
+				data.append([item.parent_item_group, item.item_group, item.name, item.item_name, bin.actual_qty, shortage_qty, bin.ordered_qty,bin.projected_qty,re_order_level, pending_po_qty, re_order_qty, bin.warehouse])
+		else:	
+			data.append([item.parent_item_group, item.item_group, item.name, item.item_name, bin.actual_qty, shortage_qty, bin.ordered_qty,bin.projected_qty,re_order_level, pending_po_qty, re_order_qty, bin.warehouse])
 
 		if include_uom:
 			conversion_factors.append(item.conversion_factor)
@@ -92,19 +93,31 @@ def get_bin_list(filters):
 	conditions = []
 
 	if filters.item_code:
-		conditions.append("item_code = '%s' "%filters.item_code)
+		conditions.append("bin.item_code = '%s' "%filters.item_code)
 
 	if filters.warehouse:
-		warehouse_details = frappe.db.get_value("Warehouse", filters.warehouse, ["lft", "rgt"], as_dict=1)
+		warehouse_details = frappe.db.get_value("bin.Warehouse", filters.warehouse, ["lft", "rgt"], as_dict=1)
 
 		if warehouse_details:
 			conditions.append(" exists (select name from `tabWarehouse` wh \
 				where wh.lft >= %s and wh.rgt <= %s and bin.warehouse = wh.name)"%(warehouse_details.lft,
 				warehouse_details.rgt))
 
-	bin_list = frappe.db.sql("""select item_code, warehouse, actual_qty, planned_qty, indented_qty,
-		ordered_qty, reserved_qty, reserved_qty_for_production, reserved_qty_for_sub_contract, projected_qty
-		from tabBin bin {conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
+	# bin_list = frappe.db.sql("""
+	# 	select item_code, warehouse, actual_qty, planned_qty, indented_qty,
+	# 	ordered_qty, reserved_qty, reserved_qty_for_production, reserved_qty_for_sub_contract, projected_qty
+	# 	from tabBin bin {conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
+
+	bin_list = frappe.db.sql("""
+		select bin.item_code, bin.warehouse, bin.actual_qty, bin.planned_qty, bin.indented_qty,
+		bin.ordered_qty, bin.reserved_qty, bin.reserved_qty_for_production, bin.reserved_qty_for_sub_contract, bin.projected_qty
+		from `tabBin` as bin 
+		JOIN `tabItem` as item on item.name = bin.item_code
+		where 
+			bin.ordered_qty = 0 and bin.warehouse = 'Other WH - PC'
+		ORDER BY
+			item.parent_item_group
+		{conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
 
 	return bin_list
 
@@ -122,15 +135,15 @@ def get_item_map(item_code, include_uom):
 
 	items = frappe.db.sql("""
 		select item.name, item.item_name, item.description, item.item_group, item.parent_item_group, item.brand, item.stock_uom{cf_field}
-		from `tabItem` item
+		from `tabItem` as item
 		{cf_join}
 		join `tabItem Group` as ig on ig.name = item.parent_item_group
 		where item.is_stock_item = 1 and ig.old_parent != "10000 Finish goods (F)"
 		and item.disabled=0
 		{condition}
 		and (item.end_of_life > %(today)s or item.end_of_life is null or item.end_of_life='0000-00-00')
-		and exists (select name from `tabBin` bin where bin.item_code=item.name)
-		order by item.parent_item_group ASC""".format(cf_field=cf_field, cf_join=cf_join, condition=condition),{"today": today(), "include_uom": include_uom}, as_dict=True)
+		and exists (select name from `tabBin` bin where bin.item_code=item.name) 
+		ORDER BY item.parent_item_group ASC""".format(cf_field=cf_field, cf_join=cf_join, condition=condition),{"today": today(), "include_uom": include_uom}, as_dict=True)
 
 # and item.item_group LIKE '%%(P)%%' or item.item_group LIKE '%%(R)%%' or item.item_group LIKE '%%Packing Material%%' or item.item_group LIKE '%%Raw Material%%'
 

@@ -1,8 +1,7 @@
-// Copyright (c) 2016, STPL and contributors
-// For license information, please see license.txt
-/* eslint-disable */
+// Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
+// License: GNU General Public License v3. See license.txt
 
-frappe.query_reports["RMPM Shortage Report"] = {
+frappe.query_reports["Inventory Management"] = {
 	"filters": [
 		{
 			"fieldname":"company",
@@ -16,7 +15,13 @@ frappe.query_reports["RMPM Shortage Report"] = {
 			"label": __("Warehouse"),
 			"fieldtype": "Link",
 			"options": "Warehouse",
-			"default": "Other WH - PC"
+			"get_query": () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value('company')
+					}
+				}
+			}
 		},
 		{
 			"fieldname":"item_code",
@@ -30,24 +35,23 @@ frappe.query_reports["RMPM Shortage Report"] = {
 			}
 		},
 		{
-			"fieldname":"parent_item_group",
-			"label": __("Parent Item Group"),
-			"fieldtype": "Link",
-			"options": "Item Group"
-		},
-		{
 			"fieldname":"item_group",
 			"label": __("Item Group"),
 			"fieldtype": "Link",
 			"options": "Item Group"
 		},
 		{
-			"fieldname":"show_nagative_shortage_qty",
-			"label": __("Show Nagative Shortage Qty"),
-			"fieldtype": "Check",
-			"default": 1
-			
+			"fieldname":"brand",
+			"label": __("Brand"),
+			"fieldtype": "Link",
+			"options": "Brand"
+		},
+		{
+			"fieldname":"include_uom",
+			"label": __("Include UOM"),
+			"fieldtype": "Link",
+			"options": "UOM"
 		}
-
 	]
-};
+}
+

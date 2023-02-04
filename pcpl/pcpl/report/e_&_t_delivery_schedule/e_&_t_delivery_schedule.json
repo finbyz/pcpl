@@ -1,0 +1,36 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2021-05-27 11:21:02.350704",
+ "disable_prepared_report": 0,
+ "disabled": 1,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2023-02-04 13:18:00.104976",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "E & T Delivery Schedule",
+ "owner": "support@princecareindia.com",
+ "prepared_report": 0,
+ "query": "Select\n`tabSales Order`.name as `Voucher No:Link/Sales Order:110`,\n`tabSales Order`.transaction_date as `Date:Date:90`,\n`tabSales Order`.customer as `Party:Link/Customer:180`,\n`tabSales Order`.delivery_date as `Commited Date:Date:110`,\n`tabSales Order`.approx_date as `Approx Date:Date:100`,\n`tabSales Order`.so_status_update_date as `Updation Date:Date:110`,\n`tabSales Order`.so_status as `Reason:Data:130`,\n`tabSales Order`.sample_status as `Sample Status:Data:120`,\n\nsum(`tabSales Order Item`.rate * (`tabSales Order Item`.qty - `tabSales Order Item`.delivered_qty)) as \"Gross Amount:Float:115\",\n`tabSales Order`.rounded_total as `Total Value:Float:120`,\n\n`tabSales Order`.status as `Status:Data:130`\n\nfrom `tabSales Order` JOIN `tabSales Order Item`\n\nwhere\n`tabSales Order Item`.`parent` = `tabSales Order`.`name`\n and `tabSales Order`.docstatus < 2\n and `tabSales Order`.status not in (\"Stopped\", \"Closed\", \"To Bill\", \"Completed\", \"Overdue\" )\n and  (so_status IS NOT NULL and so_status != '')\n\ngroup by `tabSales Order`.name\nORDER BY `tabSales Order`.name DESC ",
+ "ref_doctype": "Sales Order",
+ "report_name": "E & T Delivery Schedule",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Purchase Office"
+  },
+  {
+   "role": "PC Check Entry Accounts"
+  }
+ ]
+}
