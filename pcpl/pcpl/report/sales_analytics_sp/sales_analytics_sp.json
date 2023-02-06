@@ -1,0 +1,35 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2023-01-23 15:30:43.571744",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2023-02-06 10:10:06.825522",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "Sales Analytics SP",
+ "owner": "suresh@princecareindia.com",
+ "prepared_report": 0,
+ "ref_doctype": "Sales Order",
+ "report_name": "Sales Analytics SP",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Maintenance User"
+  },
+  {
+   "role": "PC Check Entry Accounts"
+  },
+  {
+   "role": "Sales Manager"
+  }
+ ]
+}
