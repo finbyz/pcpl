@@ -12,7 +12,7 @@ from six import iteritems
 
 import erpnext
 from erpnext.regional.india.utils import get_gst_accounts
-from india_compliance.gst_india.utils import 
+from india_compliance.gst_india.utils import get_gst_accounts_by_type
 from india_compliance.gst_india.report.gstr_1.gstr_1 import get_company_gstin_number
 
 def execute(filters=None):
