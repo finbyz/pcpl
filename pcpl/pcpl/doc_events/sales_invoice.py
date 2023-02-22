@@ -1,6 +1,10 @@
 import frappe
 from pcpl.pcpl.doctype.sales_secondary.sales_secondary import get_price_list_rate_for
 
+def on_submit(self, method):
+    if self.due_date < self.posting_date:
+        frappe.throw("Due Date can not be before posting date.")
+
 def validate(self, method):
 	if(self.invoice_for_free_item == 1):
 		for row in self.items:

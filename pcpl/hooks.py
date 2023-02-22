@@ -111,6 +111,7 @@ doc_events = {
     "Sales Invoice": {
         "before_save": "pcpl.pcpl.doc_events.sales_invoice.before_save",
         "before_submit": "pcpl.pcpl.doc_events.sales_invoice.before_submit",
+        "on_submit": "pcpl.pcpl.doc_events.sales_invoice.on_submit",
         "validate": "pcpl.pcpl.doc_events.sales_invoice.validate"
     },
     "Purchase Invoice": {

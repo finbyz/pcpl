@@ -114,7 +114,7 @@ def get_bin_list(filters):
 		from `tabBin` as bin 
 		JOIN `tabItem` as item on item.name = bin.item_code
 		where 
-			bin.ordered_qty = 0 and bin.warehouse = 'Other WH - PC'
+			bin.ordered_qty = 0 and (bin.warehouse = 'Other WH - PC' or bin.warehouse = 'Stores - PS')
 		ORDER BY
 			item.parent_item_group
 		{conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
