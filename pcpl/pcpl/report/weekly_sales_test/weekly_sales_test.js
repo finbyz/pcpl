@@ -1,8 +1,17 @@
+// Copyright (c) 2023, STPL and contributors
+// For license information, please see license.txt
+/* eslint-disable */
+
+frappe.query_reports["Weekly sales test"] = {
+	"filters": [
+
+	]
+};
 // Copyright (c) 2022, STPL and contributors
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Weekly Sales"] = {
+frappe.query_reports["Weekly sales test"] = {
 	"filters": [
 		{
 			"fieldname": "month",
@@ -41,3 +50,4 @@ frappe.query_reports["Weekly Sales"] = {
 		},
 	]
 };
+
