@@ -95,6 +95,17 @@ frappe.query_reports["Sales Invoice Trends Princecare"] = {
 				}
 			}
 		},
+		{
+			"fieldname":"parent_devision",
+			"label": __("Parent Devision"),
+			"fieldtype": "Link",
+			"options": "Territory",
+			"get_query": () =>{
+				return {
+					filters: {"territory_type": 'Zone'}
+				}
+			},
+		}
 	]
 };
 

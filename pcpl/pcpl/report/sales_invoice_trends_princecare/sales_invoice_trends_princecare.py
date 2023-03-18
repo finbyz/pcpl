@@ -815,6 +815,9 @@ def based_wise_columns_query(based_on, trans,filters):
 		based_on_details["based_on_select"] = "t2.item_group,"
 		based_on_details["based_on_group_by"] = "t2.item_group"
 		based_on_details["addl_tables"] = ""
+		if filters.get('parent_devision'):
+			based_on_details["addl_tables_relational_cond"] =  f"and t1.zone = '{filters.get('parent_devision')}'"
+		
 
 	elif based_on == "Customer":
 		based_on_details["based_on_cols"] = [

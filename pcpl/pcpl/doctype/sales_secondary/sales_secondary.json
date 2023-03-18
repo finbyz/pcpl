@@ -16,6 +16,9 @@
   "zone",
   "executive",
   "selling_price_list",
+  "cn",
+  "transfer_cn",
+  "territory",
   "section_break_8",
   "items",
   "section_break_10",
@@ -104,14 +107,33 @@
    "fieldname": "series_value",
    "fieldtype": "Int",
    "label": "Series Value"
+  },
+  {
+   "default": "0",
+   "fieldname": "cn",
+   "fieldtype": "Check",
+   "label": "CN"
+  },
+  {
+   "fieldname": "territory",
+   "fieldtype": "Link",
+   "label": "territory",
+   "options": "Territory"
+  },
+  {
+   "default": "0",
+   "fieldname": "transfer_cn",
+   "fieldtype": "Check",
+   "label": "Transfer CN"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-04 16:13:02.879247",
+ "modified": "2023-03-14 14:10:28.608852",
  "modified_by": "Administrator",
  "module": "Pcpl",
  "name": "Sales Secondary",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -164,5 +186,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "states": []
 }

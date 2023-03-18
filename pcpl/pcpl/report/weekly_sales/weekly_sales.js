@@ -9,8 +9,6 @@ frappe.query_reports["Weekly Sales"] = {
 			"label": __("Month"),
 			"fieldtype": "Select",
 			"options" : ["January","February","March","April","May","June","July","August","September","Octomber","November","December"],
-			
-			
 		},
 		{
 			"fieldname": "year",
@@ -23,13 +21,12 @@ frappe.query_reports["Weekly Sales"] = {
 			"fieldname": "base_on",
 			"label": __("Base On"),
 			"fieldtype": "Select",
-			"options" : ["Weekly","Monthly"],	
+			"options" : ["Weekly","Monthly",'Quarterlly'],	
 			on_change: function() {
 				let filter_based_on = frappe.query_report.get_filter_value('base_on');
 				frappe.query_report.toggle_filter_display('month', filter_based_on == 'Monthly');
 				frappe.query_report.refresh();
 			}
-			
 		},
 		{
 			"fieldname": "group_by",
@@ -37,7 +34,29 @@ frappe.query_reports["Weekly Sales"] = {
 			"fieldtype": "Select",
 			"options" : ['Division' ,'Sub Division', 'Zone'],
 			"reqd":1
-			
+		},
+		{
+			"fieldname":"from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+			"width": "80",
+			"depends_on":"eval:doc.base_on == 'Weekly'"
+		},
+		{
+			"fieldname":"to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+			"width": "80",
+			"depends_on":"eval:doc.base_on == 'Weekly'"
+		},
+		
+		{
+			"fieldname":"quarter",
+			"label": __("Monthly Distribution"),
+			"fieldtype": "Link",
+			"options":"Monthly Distribution",
+			"width": "80",
+			"depends_on":"eval:doc.base_on == 'Quarterlly'"
 		},
 	]
 };
