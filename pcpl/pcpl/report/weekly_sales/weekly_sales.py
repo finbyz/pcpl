@@ -8,7 +8,7 @@ from frappe.utils import getdate
 from datetime import datetime
 
 
-def execute(filters ={'year' : '2022-2023' , 'base_on':'Quarterlly' , 'group_by':'Division' , 'quarter':'Quarter 2'}):
+def execute(filters =None):
     columns, data = [], []
     data , columns = get_final_data(filters)
     return columns, data
@@ -192,7 +192,6 @@ def get_period_date_ranges(filters):
         
             month_last_date = '{}-{}-{}'.format(year__ , mon_dict.get(quarter_mon[row]) , last_day)
             period_date_ranges.append({'period_start_date':month_first_date , 'period_end_date':month_last_date})
-    print(period_date_ranges)
     if filters.get('base_on') == 'Monthly' :
         period_date_ranges = []
         year_list=year.split('-')
@@ -308,7 +307,6 @@ def get_final_data(filters):
                 final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update(duplicate_row)
         final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':gross_sa , 'total_cn':return_cn * (-1), 'total_ns':total_ns , 'total_ach':(total_ns * 100)/row.get('target_amount')  ,'total_cnp':((return_cn * 100)/gross_sa if gross_sa else 0)*(-1) })
         
-        
         columns = [
         {
         "label": "Zone",
@@ -335,7 +333,7 @@ def get_final_data(filters):
 
     if filters.get('base_on') in ['Monthly' , 'Quarterlly']:
         mon_dict = {
-        1:'January',2:'February',3:'March',4:'April',5:'May',6:'June',7:'July',8:'August',9:'September',10:'Octomber',11:'November',12:'December'
+        1:'January',2:'February',3:'March',4:'April',5:'May',6:'June',7:'July',8:'August',9:'September',10:'October',11:'November',12:'December'
         }
         from frappe.utils import flt, get_datetime
         for row in period_date_ranges:
