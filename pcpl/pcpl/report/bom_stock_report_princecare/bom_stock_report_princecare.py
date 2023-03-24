@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 
 
-def execute(filters=None):
+def execute(filters={'name': "BOM-NBZ001-007", "qty_to_produce": "10"}):
 	columns, data = [], []
 
 	columns = get_columns(filters)
@@ -21,8 +21,10 @@ def get_columns(filters):
 		{"label": _("UOM"), "fieldname": "UOM", "fieldtype": "Data", "width": 50},
 		{"label": _("Required Qty"), "fieldname": "Required", "fieldtype": "Float", "width": 100},
 		{"label": _("In Stock Qty"), "fieldname": "In Stock Qty", "fieldtype": "Float", "width": 100},
-		{"label": _("Short Qty"), "fieldname": "Short Qty", "fieldtype": "Float", "width": 120}
+		{"label": _("Short Qty"), "fieldname": "Short Qty", "fieldtype": "Float", "width": 120},
+		{"label": _("Pending PO Qty"), "fieldname": "Pending PO Qty", "fieldtype": "Float", "width": 120},
 	]
+
 def get_data(columns, filters):
 
 	qty_to_produce = 0
@@ -32,7 +34,7 @@ def get_data(columns, filters):
 	if filters.get('name'):
 		name = filters.get('name')
 	
-	return frappe.db.sql(f"""
+	bom =  frappe.db.sql(f"""
 		SELECT
 			bom_item.item_code as 'Item Code',
 			bom_item.description as 'Description',
@@ -55,4 +57,16 @@ def get_data(columns, filters):
 		GROUP BY
 			bom_item.item_code
 	""", as_dict = 1)
+	for row in bom:
+		pending_qty = frappe.db.sql(f"""
+				SELECT 
+					sum(poi.qty - ifnull(poi.received_qty, 0)) as "Pending PO Qty"
+				FROM
+					`tabPurchase Order Item` as poi
+					Left JOIN `tabPurchase Order` as po ON po.name = poi.parent
+				Where
+					poi.item_code = "{row.get('Item Code')}" and po.status = "To Receive and Bill"
+		""", as_dict = 1)
+		row.update(pending_qty[0])
+	return bom
 	

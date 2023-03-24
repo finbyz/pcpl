@@ -9,19 +9,23 @@ frappe.query_reports["Weekly Sales"] = {
 			"label": __("Month"),
 			"fieldtype": "Select",
 			"options" : ["January","February","March","April","May","June","July","August","September","Octomber","November","December"],
+			"depends_on":"eval:doc.base_on == 'Weekly'",
+			"mandatory_depends_on":"eval:doc.base_on == 'Weekly'",
 		},
 		{
 			"fieldname": "year",
 			"label": __("Year"),
-			"fieldtype": "Select",
-			"options" : ['2022-2023','2023-2024','2024-2025','2025-2026','2026-2027','2027-2028','2028-2029','2029-2030','2030-2031'],
-			"reqd":1
+			"fieldtype": "Link",
+			"options" : 'Fiscal Year',
+			"reqd":1,
+			"default":frappe.sys_defaults.fiscal_year
 		},
 		{
 			"fieldname": "base_on",
 			"label": __("Base On"),
 			"fieldtype": "Select",
-			"options" : ["Weekly","Monthly",'Quarterlly'],	
+			"options" : ["Weekly","Monthly",'Quarterlly'],
+			"reqd":1,	
 			on_change: function() {
 				let filter_based_on = frappe.query_report.get_filter_value('base_on');
 				frappe.query_report.toggle_filter_display('month', filter_based_on == 'Monthly');
@@ -56,7 +60,18 @@ frappe.query_reports["Weekly Sales"] = {
 			"fieldtype": "Link",
 			"options":"Monthly Distribution",
 			"width": "80",
-			"depends_on":"eval:doc.base_on == 'Quarterlly'"
+			"depends_on":"eval:doc.base_on == 'Quarterlly'",
+			"mandatory_depends_on":"eval:doc.base_on == 'Quarterlly'"
+		},
+		{
+			"fieldname":"select_month",
+			"label": __("Select Month"),
+			"fieldtype": "MultiSelectList",
+			"options": ['January','February','March','April','May','June','July','August','September','October','November','December'],
+			"width": "80",
+			"depends_on":"eval:doc.base_on == 'Monthly'",
+			"mandatory_depends_on":"eval:doc.base_on == 'Monthly'"
+			
 		},
 	]
 };

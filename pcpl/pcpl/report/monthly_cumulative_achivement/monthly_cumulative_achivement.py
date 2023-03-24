@@ -8,7 +8,7 @@ from frappe.utils import getdate
 from datetime import datetime
 
 
-def execute(filters = None):
+def execute(filters = {'year':'2022-2023' , 'base_on':'Monthly' , 'group_by':'Zone'}):
     columns, data = [], []
     data , columns = get_final_data(filters)
     return columns, data
@@ -20,10 +20,55 @@ def get_last_terretory_data(filters):
                             From `tabTerritory` as te
                             left join `tabTarget Detail` as td ON td.parent = te.name
                             left join `tabMonthly Distribution Percentage` as mdp ON td.distribution_id = mdp.parent
-                            where td.target_amount > 0  ''',as_dict=1)
-
+                            where td.target_amount > 0
+                             Order by
+case
+when mdp.month ='April' then 13
+when mdp.month ='May' then 14
+when mdp.month ='June' then 15
+when mdp.month ='July' then 16
+when mdp.month ='August' then 17
+when mdp.month ='September' then 18
+when mdp.month ='October' then 19
+when mdp.month ='November' then 20
+when mdp.month ='December' then 21
+when mdp.month ='January' then 22
+when mdp.month ='February' then 23
+when mdp.month ='March' then 24
+else
+  mdp.month
+end''',as_dict=1)
+    total_monthly_target=0
+    month_list_=[]
+    # for d in data:
+    #     if d.month not in month_list_:
+    #         month_list_.append(d.month)
+          
+    #         total_monthly_target+=d.monthly_target
+         
+    #     d.update({'{}_target'.format(d.month):total_monthly_target})
+    temp=[]
+    temp_1=[]
+    mo={}
     for d in data:
-        d.update({'{}_target'.format(d.month):d.monthly_target})
+        if d.territory in mo.keys():
+            if d.month not in mo[d.territory][0]:
+                mo[d.territory].append([d.month,d.monthly_target])
+               
+        else:
+            mo[d.territory]=[[d.month,d.monthly_target]]
+            total_monthly_target=0
+  
+    
+    for row in data:
+        total_monthly_target=0
+        for i in mo[row.territory]:
+            total_monthly_target+=i[1]
+            row.update({'{}_target'.format(i[0]):total_monthly_target})
+
+            
+        
+
 
     if filters.get('group_by') in ['Division','Zone']:
         data = frappe.db.sql(f""" Select sum(td.target_amount) as target_amount , te.parent_territory as territory
@@ -74,7 +119,7 @@ when mdp.month ='August' then 17
 when mdp.month ='September' then 18
 when mdp.month ='October' then 19
 when mdp.month ='November' then 20
-when mdp.month ='Decmeber' then 21
+when mdp.month ='December' then 21
 when mdp.month ='January' then 22
 when mdp.month ='February' then 23
 when mdp.month ='March' then 24
@@ -86,20 +131,18 @@ end """,as_dict =1 )
                 if d.get('percentage_allocation') and d.get('target_amount'):
                     if not month_div.get(d.parent_territory):
                         month_div[d.parent_territory] = {}
-                    if frappe.session.user == "Administrator":
-                        frappe.msgprint(str(d.month))
-                        frappe.msgprint(str((d.target_amount * d.percentage_allocation)/100))
-                        month_target=month_target+((d.target_amount * d.percentage_allocation)/100)
-                        frappe.msgprint(str(month_target))
-                        month_div.get(d.parent_territory).update({'{}_{}'.format(d.month , 'target'):month_target})
-                    else:
-                        month_div.get(d.parent_territory).update({'{}_{}'.format(d.month , 'target'):(d.target_amount * d.percentage_allocation)/100})
-    
+                   
+                    month_target=month_target+((d.target_amount * d.percentage_allocation)/100)
+                        
+                    month_div.get(d.parent_territory).update({'{}_{}'.format(d.month , 'target'):month_target})
+                   
+                
         for row in data:
             if month_div.get(row.territory):
                 row.update(month_div.get(row.territory))
-
+    
     if filters.get('group_by') == 'Zone':
+        zone_target=0
         month_div = {}
         div_target = []
         for row in data:
@@ -111,13 +154,31 @@ end """,as_dict =1 )
                                             left join `tabMonthly Distribution Percentage` as mdp on td.distribution_id = mdp.parent
                                             Where te.parent_territory = '{d}'
                                             group by mdp.month
-                                       """,as_dict =1 )
+                                            Order by
+case
+when mdp.month ='April' then 13
+when mdp.month ='May' then 14
+when mdp.month ='June' then 15
+when mdp.month ='July' then 16
+when mdp.month ='August' then 17
+when mdp.month ='September' then 18
+when mdp.month ='October' then 19
+when mdp.month ='November' then 20
+when mdp.month ='December' then 21
+when mdp.month ='January' then 22
+when mdp.month ='February' then 23
+when mdp.month ='March' then 24
+else
+  mdp.month
+end
+""",as_dict =1 )
+                
         perr_terr = []
         total = {}
         for row in div_target:
             row.update({'territory':frappe.db.get_value("Territory",row.get('parent_territory') , 'parent_territory')})            
             perr_terr.append(row.get('territory'))
-            
+       
         from itertools import groupby
         def key_func(k):
             return k['territory']
@@ -134,22 +195,33 @@ end """,as_dict =1 )
                         total[key , d.month] = {'month':d.month ,'percentage_allocation':d.percentage_allocation , 'target_amount':d.target_amount }
                     elif total.get((key , d.month)).get('target_amount'):
                         total.get((key , d.month)).update({'target_amount':total.get((key , d.month)).get('target_amount')+d.target_amount })
+        
+       
+
         terri_list = []
         terr_map_month = {}
-        month_tar=0
+        zon_tar=0
+        terr_month_list=[]
+        terr_list=[]
         for row in div_target:
             if row.territory not in terr_map_month:
                 terri_list.append(row.territory)
                 terr_map_month[row.territory] = {}
             if total.get((row.territory,row.month)):
-                frappe.msgprint(str(month_tar))
-                month_tar=month_tar+((total.get((row.territory,row.month)).get('target_amount') * total.get((row.territory,row.month)).get('percentage_allocation'))/100})
-                frappe.msgprint(str(month_tar))
-                terr_map_month.get(row.territory).update({'{}_{}'.format(row.month,'target'):month_tar)
+                if [row.territory,row.month] not in terr_month_list:
+                    if row.territory not in terr_list: 
+                        zon_tar=0
+                        terr_list.append(row.territory)
+                    terr_month_list.append( [row.territory,row.month])
+                    zon_tar+=((total.get((row.territory,row.month)).get('target_amount') * total.get((row.territory,row.month)).get('percentage_allocation'))/100)
+                    terr_map_month.get(row.territory).update({'{}_{}'.format(row.month,'target'):zon_tar})
         for row in data:
             if terr_map_month.get(row.get('territory')):
                 row.update(terr_map_month.get(row.get('territory')))
+
+
     return data
+    
 
 def get_period_date_ranges(filters):
     mon_dict = {
@@ -190,39 +262,31 @@ def get_period_date_ranges(filters):
             total_week = weeks_between( month_first_date, month_last_date)
     period_date_ranges = []
     
-    # if filters.get('base_on') == 'Weekly':
-    #     for i in range(1, total_week + 1, 1):
-    #         month_first_date = getdate(month_first_date)
-    #         period_end_date = getdate(month_first_date) + relativedelta(weeks=1, days=-1)
-    #         if period_end_date > getdate(month_last_date):
-    #             period_end_date = getdate(month_last_date)
-    #         period_date_ranges.append({'period_start_date':month_first_date, 'period_end_date':period_end_date})
-    #         month_first_date = period_end_date + relativedelta(days=1)
-    #         if period_end_date == month_last_date:
-                # break
-
-    if filters.get('base_on') == 'Monthly':
+  
+    
+    if filters.get('base_on') == 'Monthly' and filters.get('select_month'):
+        quarter_mon = []
         period_date_ranges = []
+        year = str(filters.get('year'))
         year_list=year.split('-')
-        for row in range(13):
-            import calendar
-            # starting form april in fiscal year
-            row_3=row+3
-            if  row_3>=13:
-                year_=year_list[1]
+        mon_dict = {
+                'January':1,'February':2,'March':3,'April':4,'May':5,'June':6,'July':7,'August':8,'September':9,'October':10,'November':11,'December':12
+            }
+        import calendar
+        for j ,row  in enumerate(filters.get('select_month')):
+            quarter_mon.append(row)
+            print(j)
+            if row in ['January','February' , 'March']:
+
+                year__ = year_list[1]
             else:
-                year_=year_list[0]
-            if row_3>12:
-                # for strating month 1 after change year
-                reset_row=(row%10)+1
-                row_3=reset_row
-            day = list(calendar.monthrange(int(year_), row_3))
+                year__ = year_list[0]
+            day = list(calendar.monthrange(int(year__), mon_dict.get(row)))
             last_day = day[1]
-            month_first_date = '{}-{}-1'.format(year_ , row_3 )
-        
-            month_last_date = '{}-{}-{}'.format(year_ , row_3 , last_day)
-            period_date_ranges.append({'period_start_date':month_first_date , 'period_end_date':month_last_date})
-        period_date_ranges.pop(0)
+            month_first_date = '{}-{}-1'.format(year__ , mon_dict.get(row) )
+
+            month_last_date = '{}-{}-{}'.format(year__ , mon_dict.get(row) , last_day)
+            period_date_ranges.append({'period_start_date':month_first_date , 'period_end_date':month_last_date}) 
 
     return period_date_ranges
 
@@ -285,34 +349,29 @@ def get_final_data(filters):
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
                                             Where si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
             
-            sales_return_draft = frappe.db.sql(f''' SELECT sii.qty , sii.rate , si.territory 
-                                            From `tabSales Invoice` as si 
-                                            left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
-                                            Where si.status = 'Draft' and si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
+         
 
             duplicate_row.update(row)
-            duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
-            gross_sa += sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0
-            duplicate_row.update({'{}-to-{}sales_return'.format(d.get('period_start_date') , d.get('period_end_date')):(sum(d.get('qty') * d.get('rate') for d in sales_return)) if sales_return else 0})
-            return_cn += sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0
-            duplicate_row.update({'{}-to-{}sales_return_draft'.format(d.get('period_start_date') , d.get('period_end_date')):sum(d.get('qty') * d.get('rate') for d in sales_return_draft) if sales_return_draft else 0})
-            NS = (sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0) + (sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0)
+      
+            sales_return_total = sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0
+            sum_gross_sales  = sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0
+            NS = (sum_gross_sales)+(sales_return_total)
             total_ns += NS
-            duplicate_row.update({'{}-to-{}ns'.format(d.get('period_start_date') , d.get('period_end_date')):NS})
-            ach = (NS / row.get('target_amount')) if row.get('target_amount') else 0
-            total_ach += ach
+            duplicate_row.update({'{}-to-{}ns'.format(d.get('period_start_date') , d.get('period_end_date')):total_ns})
+            mon_dict = {1:'January',2:'February',3:'March',4:'April',5:'May',6:'June',7:'July',8:'August',9:'September',10:'Octomber',11:'November',12:'December'}
+            from frappe.utils import flt, get_datetime
+            # ach = (NS / row.get('target_amount')) if row.get('target_amount') else 0
+            t='{}_target'.format(mon_dict.get(get_datetime(d.get('period_start_date')).month))
+            ach = (total_ns/row.get(t)) if row.get(t) else 0
+            # total_ach += ach
             duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):ach})
-            gs = sum(d.get('qty') * d.get('rate') for d in gross_sales)
-            if len(gross_sales) > 0:
-                duplicate_row.update({'{}-to-{}cnp'.format(d.get('period_start_date') , d.get('period_end_date')):((sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0) + (sum(d.get('qty') * d.get('rate') for d in sales_return_draft) if sales_return_draft else 0))/gs if gs != 0 else 0 })
-                total_cnp += ((sum(d.get('qty') * d.get('rate') for d in sales_return) if sales_return else 0) + (sum(d.get('qty') * d.get('rate') for d in sales_return_draft) if sales_return_draft else 0))/gs if gs != 0 else 0
-            else:
-                duplicate_row.update({'{}-to-{}cnp'.format(d.get('period_start_date') , d.get('period_end_date')):0})
+          
             if duplicate_row:
                 if not final_data.get((row.get('parent_territory'),row.get('zone') , row.get('territory'))):
                     final_data[(row.get('parent_territory'),row.get('zone'), row.get('territory'))]={}
                 final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update(duplicate_row)
-        final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':gross_sa , 'total_cn':return_cn * (-1), 'total_ns':total_ns , 'total_ach':(total_ns * 100)/row.get('target_amount')  ,'total_cnp':((return_cn * 100)/gross_sa if gross_sa else 0)*(-1) })
+       
+        
         columns = [
         {
         "label": "Zone",
@@ -366,90 +425,6 @@ def get_final_data(filters):
             },
           
         ]
-    # if filters.get('base_on') == 'Weekly' :
-    #     for row in period_date_ranges:
-    #         columns += [
-    #         {
-    #         "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'GS')),
-    #         "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'gross_sales'),
-    #         "fieldtype": "Float",
-    #         "width": 200,
-    #         "precision":2
-    #         },
-    #         {
-    #         "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'CN')),
-    #         "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'sales_return'),
-    #         "fieldtype": "Float",
-    #         "width": 200,
-    #         "precision":2
-    #         },
-    #         {
-    #         "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'TCN')),
-    #         "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'sales_return_draft'),
-    #         "fieldtype": "Float",
-    #         "width": 200,
-    #         "precision":2
-    #         },
-    #         {
-    #         "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'NS')),
-    #         "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'ns'),
-    #         "fieldtype": "Float",
-    #         "width": 200,
-    #         "precision":2
-    #         },
-    #         {
-    #         "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'ACH%')),
-    #         "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'ach'),
-    #         "fieldtype": "Float",
-    #         "width": 200,
-    #         "precision":2
-    #         },
-    #         {
-    #         "label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'CN%')),
-    #         "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'cnp'),
-    #         "fieldtype": "Float",
-    #         "width": 200,
-    #         "precision":2
-    #         },
-    #     ]
-    # columns += [
-    #     {
-    #         "label": _('Total Gross'),
-    #         "fieldname": 'total_gs',
-    #         "fieldtype": "Float",
-    #         "width": 120,
-    #         "precision":2
-    #     },
-    #     {
-    #         "label": _('Total CN'),
-    #         "fieldname": 'total_cn',
-    #         "fieldtype": "Float",
-    #         "width": 120,
-    #         "precision":2
-    #     },
-    #     {
-    #         "label": _('Total NS'),
-    #         "fieldname": 'total_ns',
-    #         "fieldtype": "Float",
-    #         "width": 120,
-    #         "precision":2
-    #     },
-    #     {
-    #         "label": _('Total ACH'),
-    #         "fieldname": 'total_ach',
-    #         "fieldtype": "Float",
-    #         "width": 120,
-    #         "precision":2
-    #     },
-    #     {
-    #         "label": _('Total CNP'),
-    #         "fieldname": 'total_cnp',
-    #         "fieldtype": "Float",
-    #         "width": 120,
-    #         "precision":2
-    #     },
-    # ]
-    
     
 
     return list(final_data.values()) , columns
