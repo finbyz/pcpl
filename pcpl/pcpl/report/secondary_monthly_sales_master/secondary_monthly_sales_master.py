@@ -7,9 +7,9 @@ from frappe.utils import flt, getdate
 from itertools import zip_longest
 
 
-def execute(filters={'fiscal_year1':'2021-2022'}):
+def execute(filters):
 	data = get_data(filters)
-	# return data
+	return data
 
 
 def get_data(filters):
@@ -22,21 +22,27 @@ def get_data(filters):
 			"width": 100
 		},
 	]
-
+	territory_cond = ""
+	if filters.get('zone'):
+		territory_cond = f" and name = '{filters.get('zone')}'"
 	terr = frappe.db.sql(f"""
-			SELECT Distinct name, lft, rgt from `tabTerritory` where territory_type = 'Zone' and is_secondary_ = 1
+			SELECT Distinct name, lft, rgt from `tabTerritory` where territory_type = 'Zone' {territory_cond} and is_secondary_ = 1
 		""", as_dict =1)
 
 	terr_dict = {f"{row.name}": (row.lft, row.rgt) for row in terr}
 
-	for type in ['CN', 'Transfer-CN', 'Net Sales', 'Target', 'Achieve']:
+	for sec_type in ['CN', 'Transfer-CN', 'Net Sales', 'Target', 'Achieve']:
+		fieldtype = "Currency"
+		if sec_type == "Achieve":
+			fieldtype = "Percent"
 		for row in terr:
 			columns.append(
-				{ "label": _(f"{row.name} - {type}"),"fieldname": f"{row.name}_{type}","fieldtype": "Currency", "width": 150})
-		columns.append(
-				{ "label": _(f"{type} - Total"),"fieldname": f"{type}_total","fieldtype": "Currency", "width": 150})
+				{ "label": _(f"{row.name} - {sec_type}"),"fieldname": f"{row.name}_{sec_type}","fieldtype": fieldtype, "width": 150})
+		if not filters.get('zone'):
+			columns.append(
+					{ "label": _(f"{sec_type} - Total"),"fieldname": f"{sec_type}_total","fieldtype": fieldtype, "width": 150})
 
-	bet_dates1 = get_period_date_ranges(period = "Monthly", fiscal_year = filters.get("fiscal_year1"))
+	bet_dates1 = get_period_date_ranges(period = "Monthly", fiscal_year = filters.get("fiscal_year"))
 
 	month_list = []
 	if bet_dates1:
@@ -45,7 +51,7 @@ def get_data(filters):
 				month_list.append(get_mon(dt[0]))
 		
 	
-	result1 = {f"{month_list[i]}_{filters.get('fiscal_year1')}": bet_dates1[i] for i in range(len(month_list))}
+	result1 = {f"{month_list[i]}_{filters.get('fiscal_year')}": bet_dates1[i] for i in range(len(month_list))}
 
 
 	final_list = []
@@ -53,60 +59,63 @@ def get_data(filters):
 	for row in month_list:
 		si_data = []
 		final_data = {'month' : row}
-		for type in ['CN', 'Transfer-CN', 'Net Sales', 'Target', 'Achieve']:
+		for sec_type in ['CN', 'Transfer-CN', 'Net Sales', 'Target']:
 			condition = None
-			if type == "CN":
+			if sec_type == "CN":
 				condition = " and si.cn = 1"
-			elif type == "Transfer-CN":
+			elif sec_type == "Transfer-CN":
 				condition = "and si.transfer_cn = 1"
-			elif type == "Net Sales":
+			elif sec_type == "Net Sales":
 				condition = "and si.transfer_cn = 0 and si.cn = 0"
-
+			final_dict = {'CN_total': 0, 'Transfer-CN_total' : 0, 'Net Sales_total': 0, 'Achieve_total': 0, 'Target_total' : 0}
 			for terr in terr_dict:
 				if condition:
 					si_data.append(frappe.db.sql(f"""
 						SELECT 
-							IF(si.total_amount, SUM(si.total_amount), 0) as total, '{terr}_{type}' as territory,'{type}' as type
+							IF(si.total_amount, SUM(si.total_amount), 0) as total, '{terr}_{sec_type}' as territory,'{sec_type}' as sec_type
 						FROM
 							`tabSales Secondary` as si
 						WHERE
-							si.docstatus = 1 and si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result1[f"{row}_{filters.get('fiscal_year1')}"][0]}' and si.posting_date <= '{result1[f"{row}_{filters.get('fiscal_year1')}"][1]}' {condition}
+							si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result1[f"{row}_{filters.get('fiscal_year')}"][0]}' and si.posting_date <= '{result1[f"{row}_{filters.get('fiscal_year')}"][1]}' {condition}
 					""", as_dict = 1))
 				else:
-					si_data.append(frappe.db.sql(f"""
+					target_data = frappe.db.sql(f"""
 						SELECT 
-							sum(td.target_amount) as target_amount, '{terr}_{type}' as territory,'{type}' as type
+							SUM((td.target_amount * IFNULL(mdp.percentage_allocation, 1))/ 100) as total, '{terr}_{sec_type}' as territory, '{sec_type}' as sec_type
 						FROM 
-							`tabTerritory` as terr 
+							`tabTerritory` as ter 
 						JOIN 
-							`tabTarget Detail` as td on terr.name = td.parent
-						WHERE
-							terr.lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}
-					""", as_dict = 1))
-			total_cn=0
-			total_tcn=0
-			total_ns=0
-			total_target=0
-			total_ach=0
+							`tabTarget Detail` as td on ter.name = td.parent
+						JOIN 
+							`tabMonthly Distribution Percentage` as mdp on mdp.parent = td.distribution_id
+						WHERE 
+							ter.lft >= {flt(terr_dict[terr][0])} and ter.rgt <= {flt(terr_dict[terr][1])} and mdp.month = '{row}' and td.fiscal_year = '{filters.get('fiscal_year')}'
+						GROUP BY 
+							mdp.month
+					""", as_dict = 1)
+					if not target_data:
+						target_data = [{'total': 0, 'territory': f'{terr}_{sec_type}', 'sec_type' : f'{sec_type}'}]
+					si_data.append(target_data)
+
 			for data in si_data:
-				
-				final_data.update({data[0]['territory'] : 1})
-				if data[0]['type']:
-					if data[0]['type'] =="CN":
-						total_cn+=1	
-					elif data[0]['type'] =="Transfer-CN":
-						total_tcn+=1
-					elif data[0]['type'] =="Net Sales":
-						total_ns+=1
-				
-			if data[0]['type']=="CN":
-				final_data.update({" CN - Total" : total_cn})
-			elif data[0]['type']=="Transfer-CN":	
-				final_data.update({"Transfer-CN - Total" : total_tcn})
-			elif data[0]['type']=="Net Sales":	
-				final_data.update({"Net Sales - Total" : total_ns})
-			print(final_data)		
-			
+				final_data.update({data[0]['territory'] : data[0].get('total')})
+
+				if data[0]['sec_type'] == 'Net Sales':
+					final_data.update({data[0]['territory'].replace("Net Sales", "Achieve") : data[0].get('total')})
+				if data[0]['sec_type'] == 'Target':
+					if data[0].get('total'):
+						final_data[data[0]['territory'].replace("Target", "Achieve")] = (final_data[data[0]['territory'].replace("Target", "Achieve")] / (flt(data[0].get('total')) or 1)) * 100
+					else:
+						final_data[data[0]['territory'].replace("Target", "Achieve")] = 0
+					final_dict['Achieve_total'] += flt(final_data[data[0]['territory'].replace("Target", "Achieve")])
+
+				if data[0]['sec_type']:
+					final_dict[f'{data[0]["sec_type"]}_total'] += flt(data[0].get('total'))
+
+			if not filters.get('zone'):
+				final_data.update({f"{sec_type}_total" : final_dict[f"{sec_type}_total"]})
+		if not filters.get('zone'):
+			final_data.update({"Achieve_total" : (final_dict['Achieve_total'] / len(terr_dict))})
 		final_list.append(final_data)
 
 	return columns, final_list
