@@ -121,6 +121,6 @@ frappe.query_reports["Trial Balance for Party"] = {
 frappe.provide("finbyzerp")
 finbyzerp.view_party_ledger_report = {
     view_party_ledger_report: function(company, from_date, to_date, account, party_type, party){
-        window.open(window.location.href.split('app')[0] + "app/query-report/Party Ledger" + "/?" + "company=" + company + "&" +  "from_date="+ from_date + "&" + "to_date=" +to_date + "&"+"account="+encodeURIComponent(account)+"&"+"party_type="+party_type + "&" +"party="+encodeURIComponent(party),"_blank")
+		window.open(`/app/query-report/Party Ledger/%3Fcompany%3D${company}%26from_date%3D${from_date}%26to_date%3D${to_date}%26account%3D${account}%26party_type%3D${party_type}%26party%3D${party}`,"_blank")
     }
 }
