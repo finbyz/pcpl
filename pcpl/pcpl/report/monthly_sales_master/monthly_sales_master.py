@@ -26,12 +26,12 @@ def get_data(filters):
 	if filters.get('zone'):
 		territory_cond = f" and name = '{filters.get('zone')}'"
 	terr = frappe.db.sql(f"""
-			SELECT Distinct name, lft, rgt from `tabTerritory` where territory_type = 'Zone' {territory_cond} and is_secondary_ = 1
+			SELECT Distinct name, lft, rgt from `tabTerritory` where territory_type = 'Zone' {territory_cond} and is_secondary_ = 0
 		""", as_dict =1)
 
 	terr_dict = {f"{row.name}": (row.lft, row.rgt) for row in terr}
 
-	for sec_type in ['Gross Sales','CN','Transfer-CN', 'Net Sales', 'Target', 'Achieve']:
+	for sec_type in ['Gross Sales','CN', 'Transfer-CN', 'Net Sales', 'Target', 'Achieve']:
 		fieldtype = "Currency"
 		if sec_type == "Achieve":
 			fieldtype = "Percent"
@@ -62,37 +62,34 @@ def get_data(filters):
 		for sec_type in ['CN','Gross Sales', 'Transfer-CN', 'Net Sales', 'Target']:
 			condition = None
 			if sec_type == "CN":
-				condition = " and si.cn = 1"
-			elif sec_type == "Gross Sales":
-				condition = "and si.transfer_cn = 0 and si.cn = 0"
+				condition = " and si.docstatus = 1"
 			elif sec_type == "Transfer-CN":
-				condition = "and si.transfer_cn = 1"
+				condition = "and si.docstatus = 1 and is_return = 1"
 			elif sec_type == "Net Sales":
-				condition = "and si.transfer_cn = 0 and si.cn = 0"
-			final_dict = {'Gross Sales_total' : 0,'CN_total': 0,'Transfer-CN_total' : 0, 'Net Sales_total': 0, 'Achieve_total': 0, 'Target_total' : 0}
+				condition = "and si.status = 'Draft' and si.docstatus = 1 and is_return = 1 "
+			final_dict = {'Gross Sales_total' : 0,'CN_total': 0, 'Transfer-CN_total' : 0, 'Net Sales_total': 0, 'Achieve_total': 0, 'Target_total' : 0}
 			for terr in terr_dict:
 				if condition:
 					if sec_type != "Gross Sales":
 						si_data.append(frappe.db.sql(f"""
-							SELECT 
-								IF(si.total_amount, SUM(si.total_amount), 0) as total, '{terr}_{sec_type}' as territory,'{sec_type}' as sec_type
-							FROM
-								`tabSales Secondary` as si
-							WHERE
-								si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result1[f"{row}_{filters.get('fiscal_year')}"][0]}' and si.posting_date <= '{result1[f"{row}_{filters.get('fiscal_year')}"][1]}' {condition}
-						""", as_dict = 1))
+						SELECT 
+							IF(si.grand_total, SUM(si.grand_total), 0) as total, '{terr}_{sec_type}' as territory,'{sec_type}' as sec_type
+						FROM
+							`tabSales Invoice` as si
+						WHERE
+							si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result1[f"{row}_{filters.get('fiscal_year')}"][0]}' and si.posting_date <= '{result1[f"{row}_{filters.get('fiscal_year')}"][1]}' {condition}
+					""", as_dict = 1))
 					else:
 						si_data.append(frappe.db.sql(f"""
 							SELECT 
-								SUM(sii.rate * sii.qty) as total, '{terr}_{sec_type}' as territory,'{sec_type}' as sec_type
+								SUM(sii.base_price_list_rate  * sii.qty) as total, '{terr}_{sec_type}' as territory,'{sec_type}' as sec_type
 							FROM
-								`tabSales Secondary Item` as sii
+								`tabSales Invoice Item` as sii
 							JOIN
-								`tabSales Secondary` as si on si.name = sii.parent
+								`tabSales Invoice` as si on si.name = sii.parent
 							WHERE
 								si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result1[f"{row}_{filters.get('fiscal_year')}"][0]}' and si.posting_date <= '{result1[f"{row}_{filters.get('fiscal_year')}"][1]}' {condition}
 						""", as_dict = 1))
-						# frappe.msgprint(str(si_data))
 				else:
 					target_data = frappe.db.sql(f"""
 						SELECT 
@@ -111,7 +108,7 @@ def get_data(filters):
 					if not target_data:
 						target_data = [{'total': 0, 'territory': f'{terr}_{sec_type}', 'sec_type' : f'{sec_type}'}]
 					si_data.append(target_data)
-
+			# frappe.msgprint(str(si_data))
 			for data in si_data:
 				final_data.update({data[0]['territory'] : data[0].get('total')})
 

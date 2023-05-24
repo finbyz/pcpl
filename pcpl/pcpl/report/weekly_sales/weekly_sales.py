@@ -6,9 +6,22 @@ from dateutil.relativedelta import relativedelta
 from frappe import _
 from frappe.utils import getdate
 from datetime import datetime
+from frappe.utils import (
+    add_days,
+    add_months,
+    cint,
+    date_diff,
+    flt,
+    get_first_day,
+    get_last_day,
+    get_link_to_form,
+    getdate,
+    rounded,
+    today,
+)
 
 
-def execute(filters =None):
+def execute(filters = {'year' : '2023-2024' , 'base_on':'Monthly' , 'group_by':'Zone' ,'select_month':['April']}):
     if filters.get('base_on') == 'Monthly' and not filters.get('select_month'):
         frappe.throw('Please Select Month in Filter ')
     if filters.get('base_on') == 'Weekly' and not filters.get('month'):
@@ -16,26 +29,33 @@ def execute(filters =None):
     columns, data = [], []
     data , columns = get_final_data(filters)
     return columns, data
-# {'year' : '2022-2023' , 'base_on':'Monthly' , 'group_by':'Sub Division' }
+# {'year' : '2023-2024' , 'base_on':'Monthly' , 'group_by':'Sub Division' ,'month':'April'}
 
 def get_last_terretory_data(filters ):
+    conditions = ""
+    if filters.get('year'):
+        conditions += f" and td.fiscal_year = '{filters.get('year')}'"
+        conditions += f" and md.fiscal_year = '{filters.get('year')}'"
     
     data = frappe.db.sql(f''' SELECT te.name as territory , td.target_amount , te.parent_territory , mdp.percentage_allocation , mdp.month, (td.target_amount * mdp.percentage_allocation)/100 as monthly_target
                             From `tabTerritory` as te
                             left join `tabTarget Detail` as td ON td.parent = te.name
                             left join `tabMonthly Distribution Percentage` as mdp ON td.distribution_id = mdp.parent
-                            where td.target_amount > 0  and is_secondary_ = 0 ''',as_dict=1)
-
+                            left join `tabMonthly Distribution` as md ON md.name = mdp.parent 
+                            where td.target_amount > 0  {conditions}''',as_dict=1)
+    
     for d in data:
         d.update({'{}_target'.format(d.month):d.monthly_target})
-
     if filters.get('group_by') in ['Division','Zone']:
+        conditions = ""
+        if filters.get('year'):
+            conditions += f" and td.fiscal_year = '{filters.get('year')}'"
         data = frappe.db.sql(f""" Select sum(td.target_amount) as target_amount , te.parent_territory as territory
                 From `tabTerritory` as te
                 left join `tabTarget Detail` as td ON td.parent = te.name
-                where te.is_group = 0 and td.target_amount > 0 and is_secondary_ = 0
+                where te.is_group = 0 and td.target_amount > 0 and is_secondary_ = 0  {conditions}
                 Group By te.parent_territory """ , as_dict = 1 )
-    
+
         for row in data:
             parent_territory = frappe.db.get_value("Territory" , row.territory , 'parent_territory')
             if parent_territory:
@@ -59,72 +79,25 @@ def get_last_terretory_data(filters ):
                     new_data.append(zone_dict)
             data = new_data
     month_div = {}
+    conditions = ""
+    monthly_dis = frappe.db.sql(f"""Select md.name as distribution_id , mdp.month , mdp.percentage_allocation 
+                                    From `tabMonthly Distribution` as md
+                                    left join `tabMonthly Distribution Percentage` as mdp ON mdp.parent = md.name
+                                    Where md.fiscal_year = '{filters.get("year")}' """,as_dict = 1)
     if filters.get("group_by") == 'Division':
         for row in data:
-            div_target = frappe.db.sql(f""" Select te.parent_territory , mdp.month , mdp.percentage_allocation ,sum(td.target_amount) as target_amount
-                                        From `tabTerritory` as te
-                                        left join`tabTarget Detail` as td ON te.name = td.parent 
-                                        left join `tabMonthly Distribution Percentage` as mdp on td.distribution_id = mdp.parent
-                                        Where te.parent_territory = '{row.territory}' 
-                                        group by mdp.month
-                                      """,as_dict =1 )
+            for d in monthly_dis:
+                if d.get('percentage_allocation'):
+                    row.update({"{}_{}".format(d.month , 'target'):(row.get('target_amount')*d.get('percentage_allocation'))/100})
             
-            for d in div_target:
-                if d.get('percentage_allocation') and d.get('target_amount'):
-                    if not month_div.get(d.parent_territory):
-                        month_div[d.parent_territory] = {}
-                    month_div.get(d.parent_territory).update({'{}_{}'.format(d.month , 'target'):(d.target_amount * d.percentage_allocation)/100})
-    
-        for row in data:
-            if month_div.get(row.territory):
-                row.update(month_div.get(row.territory))
-
     if filters.get('group_by') == 'Zone':
         month_div = {}
         div_target = []
         for row in data:
-            tare_data_list = frappe.db.get_list('Territory' , {'parent_territory':row.get('territory')} , pluck = 'name')
-            for d in tare_data_list:
-                div_target += frappe.db.sql(f""" Select te.parent_territory , mdp.month , mdp.percentage_allocation ,sum(td.target_amount) as target_amount
-                                            From `tabTerritory` as te
-                                            left join`tabTarget Detail` as td ON te.name = td.parent 
-                                            left join `tabMonthly Distribution Percentage` as mdp on td.distribution_id = mdp.parent
-                                            Where te.parent_territory = '{d}'
-                                            group by mdp.month
-                                       """,as_dict =1 )
-        perr_terr = []
-        total = {}
-        for row in div_target:
-            row.update({'territory':frappe.db.get_value("Territory",row.get('parent_territory') , 'parent_territory')})            
-            perr_terr.append(row.get('territory'))
+            for d in monthly_dis:
+                if d.get('percentage_allocation'):
+                    row.update({"{}_{}".format(d.month , 'target'):(row.get('target_amount')*d.get('percentage_allocation'))/100})
             
-        from itertools import groupby
-        def key_func(k):
-            return k['territory']
-        
-        # sort INFO data by 'company' key.
-        INFO = sorted(div_target, key=key_func)
-        
-        for key, value in groupby(INFO, key_func):
-            target = 0
-            
-            for d in list(value):
-                if d.get('percentage_allocation') and d.get('target_amount'):
-                    if not total.get((key , d.month)):
-                        total[key , d.month] = {'month':d.month ,'percentage_allocation':d.percentage_allocation , 'target_amount':d.target_amount }
-                    elif total.get((key , d.month)).get('target_amount'):
-                        total.get((key , d.month)).update({'target_amount':total.get((key , d.month)).get('target_amount')+d.target_amount })
-        terri_list = []
-        terr_map_month = {}
-        for row in div_target:
-            if row.territory not in terr_map_month:
-                terri_list.append(row.territory)
-                terr_map_month[row.territory] = {}
-            if total.get((row.territory,row.month)):
-                terr_map_month.get(row.territory).update({'{}_{}'.format(row.month,'target'):(total.get((row.territory,row.month)).get('target_amount') * total.get((row.territory,row.month)).get('percentage_allocation'))/100})
-        for row in data:
-            if terr_map_month.get(row.get('territory')):
-                row.update(terr_map_month.get(row.get('territory')))
     return data
 
 def get_period_date_ranges(filters):
@@ -207,7 +180,6 @@ def get_period_date_ranges(filters):
         import calendar
         for j ,row  in enumerate(filters.get('select_month')):
             quarter_mon.append(row)
-            # print(j)
             if row in ['January','February' , 'March']:
 
                 year__ = year_list[1]
@@ -220,7 +192,6 @@ def get_period_date_ranges(filters):
             month_last_date = '{}-{}-{}'.format(year__ , mon_dict.get(row) , last_day)
             period_date_ranges.append({'period_start_date':month_first_date , 'period_end_date':month_last_date})
                 
-    # print(period_date_ranges)
     return period_date_ranges
 
 
@@ -229,7 +200,6 @@ def get_final_data(filters):
     period_date_ranges = get_period_date_ranges(filters)
     territory_data = get_last_terretory_data(filters)    
     final_data = {}
-    
     for row in territory_data:
         if filters.get('group_by') == 'Division':
             terr_list = []
@@ -265,6 +235,7 @@ def get_final_data(filters):
             conditions = ''
             conditions += " and si.territory in {} ".format(
                 "(" + ", ".join([f'"{l}"' for l in terr_list]) + ")")
+            print(conditions)
         if filters.get('group_by') == "Sub Division":
             conditions = ""
             conditions += "and si.territory = '{}'".format(row.territory)
@@ -275,36 +246,36 @@ def get_final_data(filters):
         total_cnp = 0
         mo_target = 0
         for d in period_date_ranges:
+            
             mon_dict = {
             1:'January',2:'February',3:'March',4:'April',5:'May',6:'June',7:'July',8:'August',9:'September',10:'October',11:'November',12:'December'
             }
             from frappe.utils import flt, get_datetime
             duplicate_row = {}
             date_condi = ""
-            date_condi += f" and si.posting_date Between '{d.get('period_start_date')}' and '{d.get('period_end_date')}'"
-            gross_sales = frappe.db.sql(f''' SELECT sii.qty , sii.rate , si.territory  ,sii.amount
+            date_condi += f" and si.posting_date >= '{d.get('period_start_date')}' and si.posting_date <='{d.get('period_end_date')}'"
+            gross_sales = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory  ,sii.amount
                                             From `tabSales Invoice` as si 
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
                                             Where si.docstatus = 1  {conditions} {date_condi} ''',as_dict = 1)	
-            sales_return = frappe.db.sql(f''' SELECT sii.qty , sii.rate , si.territory , sii.amount
+            sales_return = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory , sii.amount
                                             From `tabSales Invoice` as si 
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
                                             Where si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
             
-            sales_return_draft = frappe.db.sql(f''' SELECT sii.qty , sii.rate , si.territory , sii.amount
+            sales_return_draft = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory , sii.amount
                                             From `tabSales Invoice` as si 
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
                                             Where si.status = 'Draft' and si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
 
             duplicate_row.update(row)
-            sum_gross_sales  = sum(d.get('amount') for d in gross_sales) if gross_sales else 0
+            sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
             duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_gross_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
-            print(sum_gross_sales)
             gross_sa += sum_gross_sales
-            sales_return_total = sum(d.get('amount') for d in sales_return) if sales_return else 0
+            sales_return_total = sum(d.get('qty') * d.get('price_list_rate') for d in sales_return) if sales_return else 0
             duplicate_row.update({'{}-to-{}sales_return'.format(d.get('period_start_date') , d.get('period_end_date')):sales_return_total})
             return_cn += sales_return_total
-            total_sales_return_draft = sum(d.get('amount') for d in sales_return_draft) if sales_return_draft else 0
+            total_sales_return_draft = sum(d.get('qty') * d.get('price_list_rate') for d in sales_return_draft) if sales_return_draft else 0
             duplicate_row.update({'{}-to-{}sales_return_draft'.format(d.get('period_start_date') , d.get('period_end_date')):total_sales_return_draft})
             NS = (sum_gross_sales) + (sales_return_total)
             total_ns += NS
@@ -313,8 +284,7 @@ def get_final_data(filters):
                 ach = (NS*100)/flt(row.get('{}_target'.format(mon_dict.get(get_datetime(d.get('period_start_date')).month))) )
                 total_ach += ach
                 mo_target += flt(row.get('{}_target'.format(mon_dict.get(get_datetime(d.get('period_start_date')).month))) )
-                print('{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')))
-                duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):ach})
+                duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):"{0:.2f}".format(ach)})
             gs = sum_gross_sales
             if len(gross_sales) > 0:
                 duplicate_row.update({'{}-to-{}cnp'.format(d.get('period_start_date') , d.get('period_end_date')):(sales_return_total) + (total_sales_return_draft)/gs if gs != 0 else 0 })
@@ -325,9 +295,9 @@ def get_final_data(filters):
                 if not final_data.get((row.get('parent_territory'),row.get('zone') , row.get('territory'))):
                     final_data[(row.get('parent_territory'),row.get('zone'), row.get('territory'))]={}
                 final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update(duplicate_row)
-        final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':gross_sa , 'total_cn':return_cn * (-1), 'total_ns':total_ns   ,'total_cnp':((return_cn * 100)/gross_sa if gross_sa else 0)*(-1) })
+        final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':"{0:.2f}".format(gross_sa) , 'total_cn':"{0:.2f}".format(return_cn * (-1)), 'total_ns':total_ns   ,'total_cnp':"{0:.2f}".format(((return_cn * 100)/gross_sa if gross_sa else 0)*(-1)) })
         if mo_target:
-            final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_ach':(total_ns * 100)/mo_target})
+            final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_ach':"{0:.2f}".format((total_ns * 100)/mo_target)})
         columns = [
         {
         "label": "Zone",
@@ -416,6 +386,16 @@ def get_final_data(filters):
 
 
     if filters.get('base_on') == 'Weekly' :
+        if filters.get("base_on") == 'Weekly' and filters.get('month'):
+            columns += [
+                {
+                    "label": _("{}_{}".format(filters.get('month') , 'target')),
+                    "fieldname":  "{}_{}".format(filters.get('month') , 'target'),
+                    "fieldtype": "Float",
+                    "width": 200,
+                    "precision":2
+                }
+            ]
         for row in period_date_ranges:
             columns += [
             {

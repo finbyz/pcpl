@@ -241,6 +241,7 @@ def get_final_data(filters):
             conditions += "and si.territory = '{}'".format(row.territory)
         gross_sa = 0
         gross_ps = 0
+        
         for d in period_date_ranges:
             
             mon_dict = {
@@ -256,12 +257,12 @@ def get_final_data(filters):
                                             Where si.docstatus = 1  {conditions} {date_condi} ''',as_dict = 1)	
             date_condi = ""
             date_condi += f" and si.transaction_date >= '{d.get('period_start_date')}' and si.transaction_date <='{d.get('period_end_date')}'"
-            pending_sales = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory  ,sii.amount,(sii.qty - sii.delivered_qty) AS pending_qty,
+            pending_sales = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory  ,sii.amount,(sii.qty - sii.delivered_qty) AS pending_qty
                                             From `tabSales Order` as si 
                                             left join `tabSales Order Item` as sii ON si.name = sii.parent 
                                             Where si.docstatus = 1  {conditions} {date_condi} ''',as_dict = 1)	
             
-
+            
             duplicate_row.update(row)
             sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
             duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_gross_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
@@ -270,11 +271,16 @@ def get_final_data(filters):
             duplicate_row.update({'{}-to-{}pending_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_pending_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
             gross_ps += sum_pending_sales
 
+
+            Total = (gross_sa) + (gross_ps)
+            duplicate_row.update({'{}-to-{}total'.format(d.get('period_start_date') , d.get('period_end_date')):Total})
             if duplicate_row:
                 if not final_data.get((row.get('parent_territory'),row.get('zone') , row.get('territory'))):
                     final_data[(row.get('parent_territory'),row.get('zone'), row.get('territory'))]={}
                 final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update(duplicate_row)
-        final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':"{0:.2f}".format(gross_sa),'pending_sales':"{0:.2f}".format(gross_ps)})
+        # final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total':"{0:.2f}".format(tot)})
+        # final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':"{0:.2f}".format(gross_sa),'pending_sales':"{0:.2f}".format(gross_ps),'total':tot})
+
 
         columns = [
         {
@@ -299,7 +305,8 @@ def get_final_data(filters):
         }
             from frappe.utils import flt, get_datetime
             for row in period_date_ranges:
-             columns += [
+
+                columns += [
             
             {
             "label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'GS')),
@@ -311,6 +318,13 @@ def get_final_data(filters):
             {
             "label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'PS')),
             "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'pending_sales'),
+            "fieldtype": "Float",
+            "width": 150,
+            "precision":2
+            },
+             {
+            "label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'Total')),
+            "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'total'),
             "fieldtype": "Float",
             "width": 150,
             "precision":2
@@ -331,6 +345,13 @@ def get_final_data(filters):
             {
             "label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'PS')),
             "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'pending_sales'),
+            "fieldtype": "Float",
+            "width": 150,
+            "precision":2
+            },
+            {
+            "label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'Total')),
+            "fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'total'),
             "fieldtype": "Float",
             "width": 150,
             "precision":2

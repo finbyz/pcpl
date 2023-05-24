@@ -11,15 +11,11 @@ def execute(filters=None):
 	return columns, data
 
 def get_prepare_data(filters):
-	conditions = f""
-	if filters.get("is_secondary_") == 1:
-		conditions += f"and is_secondary_ = 1"
-	else:
-		conditions += f"and is_secondary_ = 0"
+	lft,rgt=frappe.db.get_value("Territory",{'is_group':1,'is_secondary_':1,'territory_type':None},['lft','rgt'])
 	data = frappe.db.sql(f""" Select sum(td.target_amount) as target_amount , te.parent_territory as territory
 			From `tabTerritory` as te
 			left join `tabTarget Detail` as td ON td.parent = te.name
-			where te.is_group = 0 and td.target_amount > 0 {conditions}
+			where  td.target_amount > 0 and te.lft>={lft} and te.rgt={rgt}
 			Group By te.parent_territory """ , as_dict = 1 )
 
 	for row in data:
@@ -116,25 +112,25 @@ def get_data(filters):
 								sub_of_sub_l = frappe.db.get_list("Territory" , {'parent_territory':d},pluck='name')
 								terr_list += sub_of_sub_l
 		conditions = ''
-		conditions += " and si.territory in {} ".format(
+		conditions += " si.territory in {} ".format(
 			"(" + ", ".join([f'"{l}"' for l in terr_list]) + ")")
 		# print(conditions)
 		first_date , last_date = get_range(filters)
 		date_condi = ""
 		date_condi += f" and si.posting_date Between '{first_date}' and '{last_date}'"
 		gross_sales = frappe.db.sql(f''' SELECT sii.qty , sii.rate , si.territory  
-										From `tabSales Invoice` as si 
-										left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
-										Where si.docstatus = 1  {conditions} {date_condi} ''',as_dict = 1)	
+										From `tabSales Secondary` as si 
+										left join `tabSales Secondary Item` as sii ON si.name = sii.parent 
+										Where  {conditions} {date_condi} ''',as_dict = 1)	
 		sales_return = frappe.db.sql(f''' SELECT sii.qty , sii.rate , si.territory 
-										From `tabSales Invoice` as si 
-										left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
-										Where si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
+										From `tabSales Secondary` as si 
+										left join `tabSales Secondary Item` as sii ON si.name = sii.parent 
+										Where {conditions} and si.cn = 1 {date_condi}  ''',as_dict = 1)
 		
 		sales_return_draft = frappe.db.sql(f''' SELECT sii.qty , sii.rate , si.territory 
-										From `tabSales Invoice` as si 
-										left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
-										Where si.status = 'Draft' and si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
+										From `tabSales Secondary` as si 
+										left join `tabSales Secondary Item` as sii ON si.name = sii.parent 
+										Where {conditions} and si.transfer_cn = 1 {date_condi}  ''',as_dict = 1)
 		duplicate_row = {}
 		duplicate_row.update(row)
 		sum_gross_sales  = sum(d.get('qty') * d.get('rate') for d in gross_sales) if gross_sales else 0

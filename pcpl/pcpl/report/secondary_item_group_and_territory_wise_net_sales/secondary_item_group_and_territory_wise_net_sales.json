@@ -1,0 +1,35 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2023-04-28 15:45:49.269682",
+ "disable_prepared_report": 0,
+ "disabled": 1,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2023-05-06 11:36:43.503949",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "Secondary Item Group and Territory wise Net Sales",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Sales Secondary",
+ "report_name": "Secondary Item Group and Territory wise Net Sales",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Local Admin"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Sales User"
+  }
+ ]
+}

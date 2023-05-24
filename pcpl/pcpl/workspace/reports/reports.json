@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"pVWCTqIogp\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Your Shortcuts</span>\",\"col\":12}},{\"id\":\"U3mIfVGvdv\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Inventory Report</b></span>\",\"col\":12}},{\"id\":\"352KbGnwQ8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"RMPM Shortage Report\",\"col\":4}},{\"id\":\"WXqij810u8\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Balance with Last Purchase Rate\",\"col\":4}},{\"id\":\"SwFc7aNzVX\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Accounting reports</b></span>\",\"col\":12}},{\"id\":\"1jI_NSBRGM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"General Ledger Printing\",\"col\":4}},{\"id\":\"z_GsV4pIir\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"GST Sales Register Prince\",\"col\":4}},{\"id\":\"sq9UsvDvDd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"BOM Item Costing\",\"col\":4}},{\"id\":\"GJz0rDwC-G\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"BOM Item Costing\",\"col\":4}},{\"id\":\"wOaN2BhkEA\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Purchase Reports</b></span>\",\"col\":12}},{\"id\":\"mUrd1Yy2cP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order Items To Be Received\",\"col\":4}},{\"id\":\"9m3mv9lOj9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"GST Purchase Register Prince\",\"col\":4}},{\"id\":\"x3lOkRad53\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Requisiton Listing\",\"col\":4}},{\"id\":\"r7Gen44Jcf\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HSN Wise Outward Suppliers\",\"col\":4}},{\"id\":\"esbeZJIe65\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order Items To Be Billed\",\"col\":4}},{\"id\":\"fdlhQOSr8l\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"PURCHASE ORDER STATUS\",\"col\":4}},{\"id\":\"AH8Dat3cVE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item To Be Requested With Group\",\"col\":4}},{\"id\":\"Rxg7xtSLpk\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Requested Items To Be Ordered\",\"col\":4}},{\"id\":\"WqlvRab9qu\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Requested Items To Be Ordered\",\"col\":4}},{\"id\":\"2WpsFkXsj1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Purchase Order Analysis\",\"col\":4}},{\"id\":\"1Az26UcnPj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"HSN-wise-summary of outward supplies\",\"col\":4}},{\"id\":\"V3ms8scDHg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Material Receipt Listing\",\"col\":4}},{\"id\":\"_5y70sYt5h\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Received Items To Be Billed Prince\",\"col\":4}},{\"id\":\"r0jRcksn2T\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Sales Reports</b></span>\",\"col\":12}},{\"id\":\"2-hALUto9S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order Dispatch Status\",\"col\":4}},{\"id\":\"Y1yC1ohJo7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Finish Short Report\",\"col\":4}},{\"id\":\"Fm7I9jyFmB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order for Free Product\",\"col\":4}},{\"id\":\"7gyQTKVrcg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order - SO\",\"col\":4}},{\"id\":\"PcCcHvOVoy\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Ledger Customer wise\",\"col\":4}},{\"id\":\"W6DSLRwTHG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Finish Item Not Available\",\"col\":4}},{\"id\":\"M6VkwlwmFj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Invoice Wise Dispatch Status\",\"col\":4}},{\"id\":\"0M6tl74k4T\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Zone Wise Sales\",\"col\":4}},{\"id\":\"dUB5JdVJls\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Party Wise Pending Order\",\"col\":4}},{\"id\":\"Muk3Lxf_T3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Credit Note Report\",\"col\":4}},{\"id\":\"qmKu7kyERU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item-wise Sales History Prince\",\"col\":4}},{\"id\":\"TEAJZceic6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Free Product Status Sales\",\"col\":4}}]",
+ "content": "[{\"id\":\"r0jRcksn2T\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Sales Reports</b></span>\",\"col\":12}},{\"id\":\"1DJNYLk8BZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Weekly Sales\",\"col\":4}},{\"id\":\"2-hALUto9S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order Dispatch Status\",\"col\":4}},{\"id\":\"Fm7I9jyFmB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order for Free Product\",\"col\":4}},{\"id\":\"7gyQTKVrcg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order - SO\",\"col\":4}},{\"id\":\"W6DSLRwTHG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Finish Item Not Available\",\"col\":4}},{\"id\":\"M6VkwlwmFj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Invoice Wise Dispatch Status\",\"col\":4}},{\"id\":\"0M6tl74k4T\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Zone Wise Sales\",\"col\":4}},{\"id\":\"dUB5JdVJls\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Party Wise Pending Order\",\"col\":4}},{\"id\":\"qmKu7kyERU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item-wise Sales History Prince\",\"col\":4}},{\"id\":\"TEAJZceic6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Free Product Status Sales\",\"col\":4}}]",
  "creation": "2021-03-31 18:22:04.002320",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -9,10 +9,11 @@
  "is_hidden": 0,
  "label": "REPORTS",
  "links": [],
- "modified": "2023-03-14 11:59:10.298407",
- "modified_by": "Administrator",
+ "modified": "2023-04-06 17:59:05.281420",
+ "modified_by": "ethical@princecareindia.com",
  "module": "Pcpl",
  "name": "REPORTS",
+ "number_cards": [],
  "owner": "support@princecareindia.com",
  "public": 1,
  "quick_lists": [],
@@ -20,21 +21,10 @@
  "sequence_id": 68.0,
  "shortcuts": [
   {
-   "doc_view": "",
-   "label": "Purchase Requisiton Listing",
-   "link_to": "Purchase Requisiton Listing",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Material Receipt Listing",
-   "link_to": "Material Receipt Listing",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Finish Short Report",
-   "link_to": "Short Report",
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Weekly Sales",
+   "link_to": "Weekly Sales",
    "type": "Report"
   },
   {
@@ -51,42 +41,6 @@
   },
   {
    "doc_view": "",
-   "label": "Purchase Order Items To Be Billed",
-   "link_to": "Purchase Order Items To Be Billed Prince",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Purchase Order Items To Be Received",
-   "link_to": "Purchase Order Items To Be Received Prince",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Item To Be Requested With Group",
-   "link_to": "Item To Be Requested With Group",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Requested Items To Be Ordered",
-   "link_to": "Requested Items To Be Ordered Prince",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Stock Ledger Customer wise",
-   "link_to": "Stock Ledger Customer wise",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "RMPM Shortage Report",
-   "link_to": "RMPM Shortage Report",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
    "label": "Sales Order Dispatch Status",
    "link_to": "Sales Order Dispatch Status",
    "type": "Report"
@@ -95,12 +49,6 @@
    "doc_view": "",
    "label": "Finish Item Not Available",
    "link_to": "Finish Item Shortage Status",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "HSN Wise Outward Suppliers",
-   "link_to": "HSN Wise Outward Suppliers",
    "type": "Report"
   },
   {
@@ -117,26 +65,8 @@
   },
   {
    "doc_view": "",
-   "label": "PURCHASE ORDER STATUS",
-   "link_to": "PURCHASE ORDER STATUS",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
    "label": "Party Wise Pending Order",
    "link_to": "Party Wise Pending Order",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Received Items To Be Billed Prince",
-   "link_to": "Received Items To Be Billed Prince",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Credit Note Report",
-   "link_to": "Credit Note Report",
    "type": "Report"
   },
   {
@@ -149,48 +79,6 @@
    "doc_view": "",
    "label": "Free Product Status Sales",
    "link_to": "Free Product Status Sales",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "GST Sales Register Prince",
-   "link_to": "GST Sales Register Prince",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "GST Purchase Register Prince",
-   "link_to": "GST Purchase Register Prince",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "HSN-wise-summary of outward supplies",
-   "link_to": "HSN-wise-summary of outward supplies",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Purchase Order Analysis",
-   "link_to": "Purchase Order Analysis",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Stock Balance with Last Purchase Rate",
-   "link_to": "Stock Balance with Last Purchase Rate",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "BOM Item Costing",
-   "link_to": "BOM Item Costing1",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "General Ledger Printing",
-   "link_to": "General Ledger Printing",
    "type": "Report"
   }
  ],

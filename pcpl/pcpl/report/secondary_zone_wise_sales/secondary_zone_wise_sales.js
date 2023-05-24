@@ -2,14 +2,9 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Zone Wise Sales"] = {
+frappe.query_reports["Secondary Zone Wise Sales"] = {
 	"filters": [
-		{
-			"fieldname":"invoice_no",
-			"label": __("Invoice No"),
-			"fieldtype": "Link",
-			"options": "Sales Invoice",
-		},
+		
 		{
 			"fieldname":"from_date",
 			"label": __("From Date"),
@@ -29,6 +24,13 @@ frappe.query_reports["Zone Wise Sales"] = {
 			"label": __("Customer"),
 			"fieldtype": "Link",
 			"options": "Customer",
+			"get_query": function(){
+				return {
+					filters:{
+						"is_secondary_customer":1
+					}
+				}
+			}
 		},
 		{
 			"fieldname":"item_code",
@@ -36,22 +38,7 @@ frappe.query_reports["Zone Wise Sales"] = {
 			"fieldtype": "Link",
 			"options": "Item",
 		},
-		{
-			"fieldname":"status",
-			"label": __("Status"),
-			"fieldtype": "MultiSelectList",
-			get_data: function(txt) {
-				var options = []
-				var status=["Draft", "Return", "Credit Note Issued", "Submitted", "Paid", "Partly Paid", "Unpaid", "Unpaid and Discounted", "Partly Paid and Discounted", "Overdue and Discounted", "Overdue", "Internal Transfer"]				
-				for (let option of status){
-					options.push({
-						"value": option,
-						"description": ""
-					})
-				}
-				return options
-			}
-		},
+		
 		{
 			"fieldname":"zone",
 			"label": __("Zone"),
@@ -60,7 +47,8 @@ frappe.query_reports["Zone Wise Sales"] = {
 			"get_query": function(){
 				return {
 					filters:{
-						"is_group": 1
+						"is_group": 1,
+						"is_secondary_group":1
 					}
 				}
 			}
@@ -73,11 +61,25 @@ frappe.query_reports["Zone Wise Sales"] = {
 			"get_query": function(){
 				return {
 					filters:{
-						"is_group": 0
+						"is_group": 0,
+						
+						
 					}
 				}
 			}
 		},
+		
+		{
+			"fieldname":"cn",
+			"label":__("CN"),
+			"fieldtype":"Check"
+		},
+		{
+			"fieldname":"transfer_cn",
+			"label":__("Transfer CN"),
+			"fieldtype":"Check"
+		}
+
 		
 	]
 };
