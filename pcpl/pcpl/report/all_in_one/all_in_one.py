@@ -272,7 +272,7 @@ def get_final_data(filters):
             gross_ps += sum_pending_sales
 
 
-            Total = (gross_sa) + (gross_ps)
+            Total = (sum_gross_sales) + (sum_pending_sales)
             duplicate_row.update({'{}-to-{}total'.format(d.get('period_start_date') , d.get('period_end_date')):Total})
             if duplicate_row:
                 if not final_data.get((row.get('parent_territory'),row.get('zone') , row.get('territory'))):
