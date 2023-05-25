@@ -254,7 +254,7 @@ def get_final_data(filters):
             gross_sales = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory  ,sii.amount
                                             From `tabSales Invoice` as si 
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
-                                            Where si.docstatus = 1  {conditions} {date_condi} ''',as_dict = 1)	
+                                            Where si.docstatus = 1 and is_return = 0 {conditions} {date_condi} ''',as_dict = 1)	
             date_condi = ""
             date_condi += f" and si.transaction_date >= '{d.get('period_start_date')}' and si.transaction_date <='{d.get('period_end_date')}'"
             pending_sales = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory  ,sii.amount,(sii.qty - sii.delivered_qty) AS pending_qty

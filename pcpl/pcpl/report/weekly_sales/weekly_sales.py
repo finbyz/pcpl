@@ -257,7 +257,7 @@ def get_final_data(filters):
             gross_sales = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory  ,sii.amount
                                             From `tabSales Invoice` as si 
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
-                                            Where si.docstatus = 1  {conditions} {date_condi} ''',as_dict = 1)	
+                                            Where si.docstatus = 1 and is_return = 0 {conditions} {date_condi} ''',as_dict = 1)	
             sales_return = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory , sii.amount
                                             From `tabSales Invoice` as si 
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
