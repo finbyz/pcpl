@@ -250,9 +250,10 @@ def get_final_data(filters):
 			from frappe.utils import flt, get_datetime
 			duplicate_row = {}
 			con=""
-			con+=f" and sii.item_group ='{filters.get('item_group')}'"
-			date_condi = ""
-			date_condi += f" and si.posting_date >= '{d.get('period_start_date')}' and si.posting_date <='{d.get('period_end_date')}'"
+			con += " and sii.item_group in {} ".format(
+			"(" + ", ".join([f'"{l}"' for l in filters.get("item_group")]) + ")")
+			date_condi = ''
+			date_condi += f' and si.posting_date >= "{d.get("period_start_date")}" and si.posting_date <="{d.get("period_end_date")}"'
 			gross_sales = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory  ,sii.amount
 											From `tabSales Invoice` as si 
 											left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
@@ -305,31 +306,33 @@ def get_final_data(filters):
 			mon_dict = {1:'January',2:'February',3:'March',4:'April',5:'May',6:'June',7:'July',8:'August',9:'September',10:'October',11:'November',12:'December'}
 			from frappe.utils import flt, get_datetime
 			for row in period_date_ranges:
+				for i in filters.get("item_group"):
 
-				columns += [
+					columns += [
 			
 			{
-			"label": _("{}({})({})".format(filters.get('item_group') ,mon_dict.get(get_datetime(row.get('period_start_date')).month),'GS')),
+			"label": _("{}({})({})".format(i ,mon_dict.get(get_datetime(row.get('period_start_date')).month),'GS')),
 			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'gross_sales'),
 			"fieldtype": "Float",
 			"width": 150,
 			"precision":2
 			},
 			{
-			"label": _("{}({})({})".format(filters.get('item_group') ,mon_dict.get(get_datetime(row.get('period_start_date')).month),'PS')),
+			"label": _("{}({})({})".format(i,mon_dict.get(get_datetime(row.get('period_start_date')).month),'PS')),
 			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'pending_sales'),
 			"fieldtype": "Float",
 			"width": 150,
 			"precision":2
 			},
 			 {
-			"label": _("{}({})({})".format(filters.get('item_group') ,mon_dict.get(get_datetime(row.get('period_start_date')).month),'Total')),
+			"label": _("{}({})({})".format(i,mon_dict.get(get_datetime(row.get('period_start_date')).month),'Total')),
 			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'total'),
 			"fieldtype": "Float",
 			"width": 150,
 			"precision":2
 			}
 			 ]
+			 
 
 		if filters.get('base_on') == 'Weekly' :
 

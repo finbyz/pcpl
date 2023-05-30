@@ -76,9 +76,12 @@ frappe.query_reports["Contrast"] = {
 		{
 			"fieldname": "item_group",
 			"label": __("Item Group"),
-			"fieldtype": "Link",
+			"fieldtype": "MultiSelectList",
 			"options" : "Item Group",
-			"mandatory":1	
+			"mandatory":1,
+			 get_data: function(txt) {
+				return frappe.db.get_link_options('Item Group', txt);
+			}	
 			
 		},
 	]
