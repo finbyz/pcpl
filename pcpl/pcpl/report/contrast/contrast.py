@@ -267,15 +267,15 @@ def get_final_data(filters):
 			
 			duplicate_row.update(row)
 			sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
-			duplicate_row.update({'gross_sales':sum_gross_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
+			duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_gross_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
 			gross_sa += sum_gross_sales
 			sum_pending_sales  = sum(d.get('pending_qty') * d.get('price_list_rate') for d in pending_sales) if pending_sales else 0
-			duplicate_row.update({'pending_sales':sum_pending_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
+			duplicate_row.update({'{}-to-{}pending_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_pending_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
 			gross_ps += sum_pending_sales
 
 
 			Total = (sum_gross_sales) + (sum_pending_sales)
-			duplicate_row.update({'total':Total})
+			duplicate_row.update({'{}-to-{}total'.format(d.get('period_start_date') , d.get('period_end_date')):Total})
 			if duplicate_row:
 				if not final_data.get((row.get('parent_territory'),row.get('zone') , row.get('territory'))):
 					final_data[(row.get('parent_territory'),row.get('zone'), row.get('territory'))]={}
@@ -301,64 +301,62 @@ def get_final_data(filters):
 		}
 		]
 
-		# if filters.get('base_on') in ['Monthly' , 'Quarterlly']:
-		# 	mon_dict = {
-		# 1:'January',2:'February',3:'March',4:'April',5:'May',6:'June',7:'July',8:'August',9:'September',10:'October',11:'November',12:'December'
-		# }
-			# from frappe.utils import flt, get_datetime
-			# for row in period_date_ranges:
+		if filters.get('base_on') in ['Monthly' , 'Quarterlly']:
+			mon_dict = {1:'January',2:'February',3:'March',4:'April',5:'May',6:'June',7:'July',8:'August',9:'September',10:'October',11:'November',12:'December'}
+			from frappe.utils import flt, get_datetime
+			for row in period_date_ranges:
 
-		columns += [
-		
-		{
-		"label": _("{}({})".format(filters.get('item_group') ,'GS')),
-		"fieldname": 'gross_sales',
-		"fieldtype": "Float",
-		"width": 150,
-		"precision":2
-		},
-		{
-		"label": _("{}({})".format(filters.get('item_group') ,'PS')),
-		"fieldname": 'pending_sales',
-		"fieldtype": "Float",
-		"width": 150,
-		"precision":2
-		},
+				columns += [
+			
 			{
-		"label": _("{}({})".format(filters.get('item_group') ,'Total')),
-		"fieldname": 'total',
-		"fieldtype": "Float",
-		"width": 150,
-		"precision":2
-		}
+			"label": _("{}({})({})".format(filters.get('item_group') ,mon_dict.get(get_datetime(row.get('period_start_date')).month),'GS')),
+			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'gross_sales'),
+			"fieldtype": "Float",
+			"width": 150,
+			"precision":2
+			},
+			{
+			"label": _("{}({})({})".format(filters.get('item_group') ,mon_dict.get(get_datetime(row.get('period_start_date')).month),'PS')),
+			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'pending_sales'),
+			"fieldtype": "Float",
+			"width": 150,
+			"precision":2
+			},
+			 {
+			"label": _("{}({})({})".format(filters.get('item_group') ,mon_dict.get(get_datetime(row.get('period_start_date')).month),'Total')),
+			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'total'),
+			"fieldtype": "Float",
+			"width": 150,
+			"precision":2
+			}
+			 ]
+
+		if filters.get('base_on') == 'Weekly' :
+
+			for row in period_date_ranges:
+				columns += [
+			{
+			"label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'GS')),
+			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'gross_sales'),
+			"fieldtype": "Float",
+			"width": 200,
+			"precision":2
+			},
+			{
+			"label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'PS')),
+			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'pending_sales'),
+			"fieldtype": "Float",
+			"width": 150,
+			"precision":2
+			},
+			{
+			"label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'Total')),
+			"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'total'),
+			"fieldtype": "Float",
+			"width": 150,
+			"precision":2
+			}
 			]
-
-		# if filters.get('base_on') == 'Weekly' :
-
-		# 	for row in period_date_ranges:
-		# 		columns += [
-		# 	{
-		# 	"label": _("{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'GS')),
-		# 	"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'gross_sales'),
-		# 	"fieldtype": "Float",
-		# 	"width": 200,
-		# 	"precision":2
-		# 	},
-		# 	{
-		# 	"label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'PS')),
-		# 	"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'pending_sales'),
-		# 	"fieldtype": "Float",
-		# 	"width": 150,
-		# 	"precision":2
-		# 	},
-		# 	{
-		# 	"label": _("{}({})".format(mon_dict.get(get_datetime(row.get('period_start_date')).month) ,'Total')),
-		# 	"fieldname": "{}-to-{}{}".format(row.get('period_start_date') , row.get('period_end_date'),'total'),
-		# 	"fieldtype": "Float",
-		# 	"width": 150,
-		# 	"precision":2
-		# 	}
-		# 	]
 	return list(final_data.values()) , columns
 
 def weeks_between(start_date, end_date):
