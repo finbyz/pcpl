@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt, getdate
 
-def execute(filters=None):
+def execute(filters):
 	data = get_data(filters)
 	return data
 
@@ -74,14 +74,16 @@ def get_data(filters):
 							new_data[row.item_group].update({ter : {'item_group' : row.item_group, f"{ter}_amount" : row.amount}})
 					else:
 						new_data.update({row.item_group : {ter : {'item_group' : row.item_group, f"{ter}_amount" : row.amount}}})
-
 	final_data = []
 	final_dict = {}
 	if new_data:
 		for row in new_data:
 			final_dict.update({row: {}})
 			for gr in new_data[row]:
-				new_data[row][gr].update({f"{gr}_share" : (flt(new_data[row][gr][f"{gr}_amount"]) * 100) / flt(total_amount[gr])})
+				if flt(new_data[row][gr][f"{gr}_amount"]) > 0:
+					new_data[row][gr].update({f"{gr}_share" : (flt(new_data[row][gr][f"{gr}_amount"]) * 100) / flt(total_amount[gr])})
+				else:
+					new_data[row][gr].update({f"{gr}_share" :0})
 				final_dict[row].update(new_data[row][gr])
 
 	for row in final_dict:
@@ -112,3 +114,7 @@ def get_period_date_ranges(period, fiscal_year=None, year_start_date=None):
 			break
 
 	return period_date_ranges
+
+
+
+	
