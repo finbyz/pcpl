@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["Contrast"] = {
+frappe.query_reports["Contest"] = {
 	"filters": [
 		{
 			"fieldname": "month",
@@ -52,7 +52,7 @@ frappe.query_reports["Contrast"] = {
 			"fieldtype": "Date",
 			"width": "80",
 			"depends_on":"eval:doc.base_on == 'Weekly'"
-		},
+		},	
 		{
 			"fieldname":"start_date",
 			"label": __("Start Date"),
@@ -66,9 +66,7 @@ frappe.query_reports["Contrast"] = {
 			"fieldtype": "Date",
 			"width": "80",
 			"depends_on":"eval:doc.base_on == 'Date Range'"
-		},
-		
-		
+		},	
 		{
 			"fieldname":"quarter",
 			"label": __("Monthly Distribution"),

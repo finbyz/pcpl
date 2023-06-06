@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"r0jRcksn2T\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Sales Reports</b></span>\",\"col\":12}},{\"id\":\"1DJNYLk8BZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Weekly Sales\",\"col\":4}},{\"id\":\"2-hALUto9S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order Dispatch Status\",\"col\":4}},{\"id\":\"Fm7I9jyFmB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order for Free Product\",\"col\":4}},{\"id\":\"7gyQTKVrcg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order - SO\",\"col\":4}},{\"id\":\"W6DSLRwTHG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Finish Item Not Available\",\"col\":4}},{\"id\":\"M6VkwlwmFj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Invoice Wise Dispatch Status\",\"col\":4}},{\"id\":\"0M6tl74k4T\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Zone Wise Sales\",\"col\":4}},{\"id\":\"dUB5JdVJls\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Party Wise Pending Order\",\"col\":4}},{\"id\":\"qmKu7kyERU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item-wise Sales History Prince\",\"col\":4}},{\"id\":\"TEAJZceic6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Free Product Status Sales\",\"col\":4}}]",
+ "content": "[{\"id\":\"r0jRcksn2T\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Sales Reports</b></span>\",\"col\":12}},{\"id\":\"1DJNYLk8BZ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Weekly Sales\",\"col\":4}},{\"id\":\"dZUkyPkwj3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"All In One\",\"col\":4}},{\"id\":\"2-hALUto9S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order Dispatch Status\",\"col\":4}},{\"id\":\"Fm7I9jyFmB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order for Free Product\",\"col\":4}},{\"id\":\"7gyQTKVrcg\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Pending Order - SO\",\"col\":4}},{\"id\":\"W6DSLRwTHG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Finish Item Not Available\",\"col\":4}},{\"id\":\"M6VkwlwmFj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Invoice Wise Dispatch Status\",\"col\":4}},{\"id\":\"0M6tl74k4T\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Zone Wise Sales\",\"col\":4}},{\"id\":\"dUB5JdVJls\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Party Wise Pending Order\",\"col\":4}},{\"id\":\"qmKu7kyERU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item-wise Sales History Prince\",\"col\":4}},{\"id\":\"TEAJZceic6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Free Product Status Sales\",\"col\":4}}]",
  "creation": "2021-03-31 18:22:04.002320",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -9,7 +9,7 @@
  "is_hidden": 0,
  "label": "REPORTS",
  "links": [],
- "modified": "2023-04-06 17:59:05.281420",
+ "modified": "2023-06-01 10:43:04.145271",
  "modified_by": "ethical@princecareindia.com",
  "module": "Pcpl",
  "name": "REPORTS",
@@ -25,6 +25,13 @@
    "doc_view": "List",
    "label": "Weekly Sales",
    "link_to": "Weekly Sales",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "All In One",
+   "link_to": "All In One",
    "type": "Report"
   },
   {
