@@ -18,7 +18,8 @@ frappe.query_reports["Contest"] = {
 			"fieldtype": "Link",
 			"options" : 'Fiscal Year',
 			"reqd":1,
-			"default":frappe.sys_defaults.fiscal_year
+			"default":"2023-2024"
+			
 		},
 		{
 			"fieldname": "base_on",
@@ -67,6 +68,8 @@ frappe.query_reports["Contest"] = {
 			"width": "80",
 			"depends_on":"eval:doc.base_on == 'Date Range'"
 		},	
+		
+		
 		{
 			"fieldname":"quarter",
 			"label": __("Monthly Distribution"),
@@ -91,7 +94,7 @@ frappe.query_reports["Contest"] = {
 			"label": __("Item Group"),
 			"fieldtype": "MultiSelectList",
 			"options" : "Item Group",
-			"mandatory":1,
+			"reqd":1,
 			 get_data: function(txt) {
 				return frappe.db.get_link_options('Item Group', txt);
 			}	
