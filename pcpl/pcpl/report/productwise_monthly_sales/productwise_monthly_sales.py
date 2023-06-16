@@ -22,8 +22,10 @@ def get_data(filters):
 	columns+=[
 		{ "label": _("Total"),"fieldname": "total","fieldtype": "Currency", "width": 110}]
 	lft,rgt = frappe.db.get_value("Item Group",'10000 Finish goods (F)',['lft','rgt'])
+	lft_allopathic,rgt_allopathic = frappe.db.get_value("Item Group",'1604 Allopathic  (F) Prolific',['lft','rgt'])
 	item_group_list = frappe.db.get_all('Item Group',{'lft': ['>=',lft],'rgt':['<=',rgt]},pluck="name")
-	item_group_list.append('1604 Allopathic  (F) Prolific') #Add static item_grop for only 1604 Allopathic  (F) Prolific 
+	allopathic_item_group_list = frappe.db.get_all('Item Group',{'lft': ['>=',lft_allopathic],'rgt':['<=',rgt_allopathic]},pluck="name")
+	item_group_list+=allopathic_item_group_list # add allopatthics list becuase of add those item_group that parent is '1604 Allopathic  (F) Prolific'
 	conditions = ''
 	conditions += " and sii.item_group in {} ".format(
 		"(" + ", ".join([f'"{l}"' for l in item_group_list]) + ")")
