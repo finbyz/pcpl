@@ -162,7 +162,6 @@ def get_final_data(filters):
 	for l in filters.get("item_group"): 
 		con=""
 		con += " and sii.item_group = '{}' ".format(l)
-		print(l)
 		for row in territory_data:
 			if filters.get('group_by') in ['Division','Zone']:
 				terr_list = frappe.db.get_all('Territory',{'lft': ['>=', row.get('lft')],'rgt':['<=',row.get('rgt')]})

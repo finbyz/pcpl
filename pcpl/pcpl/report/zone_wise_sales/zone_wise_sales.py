@@ -19,6 +19,7 @@ def get_columns(filters):
 		{"label": _("State"), "fieldname": "place_of_supply", "fieldtype": "Data", "width": 100},
 		{"label": _("Item Code"), "fieldname": "item_code", "fieldtype": "Link", "options": "Item", "width": 130},
 		{"label": _("Item Name"), "fieldname": "item_name", "fieldtype": "Data", "width": 130},
+		{"label": _("Item Group"), "fieldname": "item_group", "fieldtype": "Link", "options": "Item Group", "width": 130},
 		{"label": _("Qty"), "fieldname": "qty", "fieldtype": "Float", "width": 80},
 		{"label": _("Price List Rate"), "fieldname": "price_list_rate", "fieldtype": "Currency", "width": 100},
 		{"label": _("Gross Amount"), "fieldname": "gross_amount", "fieldtype": "Currency", "width": 100},
@@ -64,7 +65,7 @@ def get_data(filters):
 	data = frappe.db.sql("""
 		select
 			si.name as invoice_no, si.posting_date, customer_g.parent_customer_group as zone, customer_g.name as devision,
-			si.customer, si.customer_city, si.place_of_supply, si_item.item_code, si_item.item_name, si_item.qty,
+			si.customer, si.customer_city, si.place_of_supply, si_item.item_code, si_item.item_name,si_item.item_group, si_item.qty,
 			si_item.price_list_rate, (si_item.price_list_rate * si_item.qty) as gross_amount, si_item.discount_percentage,
 			si_item.discount_amount_total, si_item.base_net_amount, round(si_item.net_amount_total, 0) as grand_total,
 			si.total_parcel, si.transporter, si.lr_no, si.lr_date, si.pod_number, si.status
