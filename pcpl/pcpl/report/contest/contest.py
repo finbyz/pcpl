@@ -172,8 +172,6 @@ def get_final_data(filters):
 			if filters.get('group_by') == "Sub Division":
 				conditions = ""
 				conditions += "and si.territory = '{}'".format(row.territory)
-			gross_sa = 0
-			gross_ps = 0
 
 			for d in period_date_ranges:
 				
@@ -204,9 +202,9 @@ def get_final_data(filters):
 				sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
 
 
-				duplicate_row.update({'{}-to-{}gross_sales{}'.format(d.get('period_start_date') , d.get('period_end_date'),l):sum_gross_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
+				duplicate_row.update({'{}-to-{}gross_sales{}'.format(d.get('period_start_date') , d.get('period_end_date'),l):sum_gross_sales})
 				sum_pending_sales  = sum(d.get('pending_qty') * d.get('price_list_rate') for d in pending_sales) if pending_sales else 0
-				duplicate_row.update({'{}-to-{}pending_sales{}'.format(d.get('period_start_date') , d.get('period_end_date'),l):sum_pending_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
+				duplicate_row.update({'{}-to-{}pending_sales{}'.format(d.get('period_start_date') , d.get('period_end_date'),l):sum_pending_sales})
 
 
 				Total = (sum_gross_sales) + (sum_pending_sales)

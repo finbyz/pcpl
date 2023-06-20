@@ -4,14 +4,7 @@
 
 frappe.query_reports["All In One"] = {
 	"filters": [
-		{
-			"fieldname": "month",
-			"label": __("Month"),
-			"fieldtype": "Select",
-			"options" : ["January","February","March","April","May","June","July","August","September","Octomber","November","December"],
-			"depends_on":"eval:doc.base_on == 'Weekly'",
-			"mandatory_depends_on":"eval:doc.base_on == 'Weekly'",
-		},
+		
 		{
 			"fieldname": "year",
 			"label": __("Year"),
@@ -38,6 +31,14 @@ frappe.query_reports["All In One"] = {
 			"fieldtype": "Select",
 			"options" : ['Division' ,'Sub Division', 'Zone'],
 			"reqd":1
+		},
+		{
+			"fieldname": "month",
+			"label": __("Month"),
+			"fieldtype": "Select",
+			"options" : ["January","February","March","April","May","June","July","August","September","Octomber","November","December"],
+			"depends_on":"eval:doc.base_on == 'Weekly'",
+			"mandatory_depends_on":"eval:doc.base_on == 'Weekly'",
 		},
 		{
 			"fieldname":"from_date",
@@ -72,6 +73,13 @@ frappe.query_reports["All In One"] = {
 			"depends_on":"eval:doc.base_on == 'Monthly'",
 			"mandatory_depends_on":"eval:doc.base_on == 'Monthly'"
 			
+		},
+		{
+			"fieldname":"show_zone_total",
+			"label": __("Show Zone Total"),
+			"fieldtype": "Check",
+			"depends_on":"eval:doc.group_by == 'Zone'",	
+			"default": 0	
 		},
 	]
 };

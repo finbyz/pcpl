@@ -59,14 +59,12 @@ def get_final_data(filters={"fiscal_year1":"2022-2023","fiscal_year2":"2023-2024
 				final_data[(row.get('parent_territory') ,r.get('customer') , row.get('territory'))]={}
 			final_data[(row.get('parent_territory') ,r.get('customer') ,row.get('territory'))].update(r)
 			final_data[(row.get('parent_territory') ,r.get('customer') ,row.get('territory'))].update(row)
-		# print(list(final_data.values()))
 		for j in list(final_data.values()):
 			fiscal_year_1 = j.get('total_fiscal_year1') if j.get('total_fiscal_year1') else 0
 			fiscal_year_2 = j.get('total_fiscal_year2') if j.get('total_fiscal_year2') else 0
 			j.update({'difference':(fiscal_year_1 - fiscal_year_2)})
 			if fiscal_year_2:
 				j.update({'growth': (j.get('difference')/fiscal_year_2 * 100)})
-			# j.update({'growth':(fiscal_year_2 )})
 		
 	return list(final_data.values())
 def get_cols(filters=None):
@@ -113,7 +111,7 @@ def get_cols(filters=None):
 	"precision":2
 	},
 	{
-	"label": "Difference",
+	"label": "Difference (Net Sales({}) - Net Sales ({}))".format(filters.get('fiscal_year1'),filters.get('fiscal_year2')),
 	"fieldname": "difference",
 	"fieldtype": "Float",
 	"width": 150,
