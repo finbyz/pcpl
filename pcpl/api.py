@@ -43,3 +43,15 @@ def get_sales_tax_template(tax_category, company):
 def set_sales_taxes_and_charges(self, method):
 	if self.tax_category and not self.taxes_and_charges:
 		self.taxes_and_charges = get_sales_tax_template(self.tax_category, self.company)
+
+def check_user_limit(self , method):
+	# if self.user_type == 'Employee Self Service':
+	# 	count_user = frappe.db.sql(""" Select count(name) as user From `tabUser` Where user_type = "Employee Self Service" and enabled = 1 """,as_dict = 1)
+	# 	if count_user[0].get('user') > 14:
+	# 		frappe.throw("Your User Limit of Employee Self Service Is 14 <br>You can Disable Or Enable Other User Or Purchase New User<br>Contact Your Service Provider")
+	# if self.user_type == "System User":
+	count_user = frappe.db.sql(""" Select count(name) as user From `tabUser` Where  enabled = 1 """,as_dict = 1)
+	if count_user[0].get('user') > 45:
+		# frappe.throw(str(count_user[0].get('user') + 1))
+		frappe.throw("Your User Limit of System User Is 45 <br>You can Disable Or Enable Other User Or Purchase New User<br>Contact Your Service Provider")
+

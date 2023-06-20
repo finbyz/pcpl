@@ -123,6 +123,9 @@ doc_events = {
     "Sales Order":{
         "before_validate": ["pcpl.api.set_sales_taxes_and_charges", "pcpl.pcpl.doc_events.sales_order.before_validate"],
         "on_submit" : "pcpl.pcpl.doc_events.sales_order.on_submit"
+    },
+    "User":{
+        "validate":"pcpl.api.check_user_limit"
     }
 }
 
