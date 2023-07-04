@@ -17,7 +17,7 @@ def execute(filters = None):
 
 
 def get_last_terretory_data(filters):
-	lft,rgt=frappe.db.get_value("Territory",{'is_group':1,'is_secondary_':1,"territory_type":None},['lft','rgt'])
+	lft,rgt=frappe.db.get_value("Territory",'Secondary Party',['lft','rgt'])
 	data = frappe.db.sql(f''' SELECT te.name as territory , td.target_amount , te.parent_territory , mdp.percentage_allocation , mdp.month, (td.target_amount * mdp.percentage_allocation)/100 as monthly_target
 							From `tabTerritory` as te
 							left join `tabTarget Detail` as td ON td.parent = te.name
@@ -70,7 +70,7 @@ end ''',as_dict=1)
 			row.update({'{}_target'.format(i[0]):total_monthly_target})
 
 	if filters.get('group_by') in ['Division','Zone']:
-		lft,rgt=frappe.db.get_value("Territory",{'is_group':1,'is_secondary_':1,'territory_type':None},['lft','rgt'])
+		lft,rgt=frappe.db.get_value("Territory",'Secondary Party',['lft','rgt'])
 		data = frappe.db.sql(f""" Select sum(td.target_amount) as target_amount , te.parent_territory as territory
 				From `tabTerritory` as te
 				left join `tabTarget Detail` as td ON td.parent = te.name
@@ -328,7 +328,7 @@ def get_final_data(filters):
 						if sub_of_sub:
 							terr_list += sub_of_sub
 			conditions = ''
-			conditions += " and si.territory in {} ".format(
+			conditions += "  si.territory in {} ".format(
 				"(" + ", ".join([f'"{l}"' for l in terr_list]) + ")")
 		if filters.get('group_by') == 'Zone':
 			terr_list = []
@@ -346,7 +346,7 @@ def get_final_data(filters):
 									sub_of_sub_l = frappe.db.get_list("Territory" , {'parent_territory':d},pluck='name')
 									terr_list += sub_of_sub_l
 			conditions = ''
-			conditions += " and si.territory in {} ".format(
+			conditions += "  si.territory in {} ".format(
 				"(" + ", ".join([f'"{l}"' for l in terr_list]) + ")")
 		if filters.get('group_by') == "Sub Division":
 			conditions = ""

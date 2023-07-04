@@ -19,7 +19,7 @@ def get_data(filters):
 		condition = f"and parent_territory = '{filters.get('parent_devision')}'"
 
 	terr = frappe.db.sql(f"""
-			SELECT Distinct name, lft, rgt from `tabTerritory` where territory_type = '{filters.get('territory_type')}' {condition}
+			SELECT Distinct name, lft, rgt from `tabTerritory` where is_secondary_=0 and territory_type = '{filters.get('territory_type')}' {condition}
 		""", as_dict =1)
 
 	terr_dict = {}
