@@ -11,6 +11,7 @@
   "naming_series",
   "series_value",
   "posting_date",
+  "lft",
   "column_break_3",
   "secondary_party",
   "zone",
@@ -19,6 +20,7 @@
   "cn",
   "transfer_cn",
   "territory",
+  "rgt",
   "section_break_8",
   "items",
   "section_break_10",
@@ -125,11 +127,27 @@
    "fieldname": "transfer_cn",
    "fieldtype": "Check",
    "label": "Transfer CN"
+  },
+  {
+   "fetch_from": "territory.lft",
+   "fieldname": "lft",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Lft",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "territory.rgt",
+   "fieldname": "rgt",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Rgt",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-14 14:10:28.608852",
+ "modified": "2023-07-12 12:55:10.031033",
  "modified_by": "Administrator",
  "module": "Pcpl",
  "name": "Sales Secondary",

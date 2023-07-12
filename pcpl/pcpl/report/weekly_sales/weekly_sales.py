@@ -258,9 +258,9 @@ def get_final_data(filters):
                                             From `tabSales Invoice` as si 
                                             left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
                                             Where si.docstatus = 1 and is_return = 0 {conditions} {date_condi} ''',as_dict = 1)	
-            sales_return = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory , sii.amount
+            sales_return = frappe.db.sql(f''' SELECT si.total , si.territory 
                                             From `tabSales Invoice` as si 
-                                            left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
+                                            # left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
                                             Where si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
             
             sales_return_draft = frappe.db.sql(f''' SELECT sii.qty , sii.price_list_rate , si.territory , sii.amount
@@ -272,7 +272,7 @@ def get_final_data(filters):
             sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
             duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_gross_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
             gross_sa += sum_gross_sales
-            sales_return_total = sum(d.get('qty') * d.get('price_list_rate') for d in sales_return) if sales_return else 0
+            sales_return_total = sum(d.get('total') for d in sales_return) if sales_return else 0
             duplicate_row.update({'{}-to-{}sales_return'.format(d.get('period_start_date') , d.get('period_end_date')):sales_return_total})
             return_cn += sales_return_total
             total_sales_return_draft = sum(d.get('qty') * d.get('price_list_rate') for d in sales_return_draft) if sales_return_draft else 0
@@ -284,7 +284,7 @@ def get_final_data(filters):
                 ach = (NS*100)/flt(row.get('{}_target'.format(mon_dict.get(get_datetime(d.get('period_start_date')).month))) )
                 total_ach += ach
                 mo_target += flt(row.get('{}_target'.format(mon_dict.get(get_datetime(d.get('period_start_date')).month))) )
-                duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):"{0:.2f}".format(ach)})
+                duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):ach})
             gs = sum_gross_sales
             if len(gross_sales) > 0:
                 duplicate_row.update({'{}-to-{}cnp'.format(d.get('period_start_date') , d.get('period_end_date')):(sales_return_total) + (total_sales_return_draft)/gs if gs != 0 else 0 })
@@ -295,9 +295,9 @@ def get_final_data(filters):
                 if not final_data.get((row.get('parent_territory'),row.get('zone') , row.get('territory'))):
                     final_data[(row.get('parent_territory'),row.get('zone'), row.get('territory'))]={}
                 final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update(duplicate_row)
-        final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':"{0:.2f}".format(gross_sa) , 'total_cn':"{0:.2f}".format(return_cn * (-1)), 'total_ns':total_ns   ,'total_cnp':"{0:.2f}".format(((return_cn * 100)/gross_sa if gross_sa else 0)*(-1)) })
+        final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_gs':gross_sa , 'total_cn':(return_cn * (-1)), 'total_ns':total_ns   ,'total_cnp':round((((return_cn * 100)/gross_sa if gross_sa else 0)*(-1)),2) })
         if mo_target:
-            final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_ach':"{0:.2f}".format((total_ns * 100)/mo_target)})
+            final_data[(row.get('parent_territory'),row.get('zone') ,row.get('territory'))].update({'total_ach':round(((total_ns * 100)/mo_target),2)})
         columns = [
         {
         "label": "Zone",

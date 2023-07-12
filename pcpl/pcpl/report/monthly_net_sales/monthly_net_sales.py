@@ -7,7 +7,7 @@ from frappe.utils import flt, getdate
 from itertools import zip_longest
 
 
-def execute(filters=None):
+def execute(filters):
 	data = get_data(filters)
 	return data
 
@@ -18,12 +18,18 @@ def get_data(filters):
 	field = "total"
 	territory_condition = " and is_secondary_ = 0"
 	docstatus_cond = "si.docstatus = 1 and "
+	is_return_cond = "si.is_return = 1"
+	if_is_return_cond = "(sii.base_net_amount)"
+	else_is_return_cond = "(sii.qty * sii.price_list_rate)"
 
 	if filters.get('show_secondary'):
 		doctype = "Sales Secondary"
 		field = "total_amount"
 		territory_condition = "and is_secondary_ = 1"
 		docstatus_cond = ""
+		is_return_cond = 'si.cn = 1 '
+		if_is_return_cond = 'sii.amount '
+		else_is_return_cond = 'sii.amount '
 
 	columns = [
 		{
@@ -72,23 +78,28 @@ def get_data(filters):
 
 	for row in month_list:
 		si_data = []
+		si_return_data=[]
 		for terr in terr_dict:
 			si_data.append(frappe.db.sql(f"""
 				SELECT 
-					IF(si.{field}, SUM(si.{field}), 0) as total, '{terr}_{filters.get('fiscal_year1')}' as territory, '{filters.get('fiscal_year1')}' as fiscal_year
+					sum(if({is_return_cond},{if_is_return_cond},{else_is_return_cond})) as total , '{terr}_{filters.get('fiscal_year1')}' as territory, '{filters.get('fiscal_year1')}' as fiscal_year
 				FROM
 					`tab{doctype}` as si
+				left join
+					`tab{doctype} Item` as sii ON si.name = sii.parent 
 				WHERE
-					{docstatus_cond} si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result1[f"{row}_{filters.get('fiscal_year1')}"][0]}' and si.posting_date <= '{result1[f"{row}_{filters.get('fiscal_year1')}"][1]}'
+					{docstatus_cond} si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result1[f"{row}_{filters.get('fiscal_year1')}"][0]}' and si.posting_date <= '{result1[f"{row}_{filters.get('fiscal_year1')}"][1]}' 
 			""", as_dict = 1))
 
 			si_data.append(frappe.db.sql(f"""
 				SELECT 
-					IF(si.{field}, SUM(si.{field}), 0) as total, '{terr}_{filters.get('fiscal_year2')}' as territory, '{filters.get('fiscal_year2')}' as fiscal_year
+					sum(if({is_return_cond},{if_is_return_cond},{else_is_return_cond})) as total , '{terr}_{filters.get('fiscal_year2')}' as territory, '{filters.get('fiscal_year2')}' as fiscal_year
 				FROM
 					`tab{doctype}` as si
+				left join
+					`tab{doctype} Item` as sii ON si.name = sii.parent 
 				WHERE
-					{docstatus_cond} si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result2[f"{row}_{filters.get('fiscal_year2')}"][0]}' and si.posting_date <= '{result2[f"{row}_{filters.get('fiscal_year2')}"][1]}'
+					{docstatus_cond} si.territory in (select name from `tabTerritory` where lft >= {flt(terr_dict[terr][0])} and rgt <= {flt(terr_dict[terr][1])}) and si.posting_date >= '{result2[f"{row}_{filters.get('fiscal_year2')}"][0]}' and si.posting_date <= '{result2[f"{row}_{filters.get('fiscal_year2')}"][1]}' 
 			""", as_dict = 1))
 
 		final_data = {'month' : row}

@@ -18,9 +18,9 @@ def get_data(filters):
 	bet_dates = get_period_date_ranges("Monthly", filters.get("fiscal_year"))
 	for i in range(len(bet_dates)):
 		columns.append(
-			{ "label": _(f"{mon_dict.get(get_datetime(bet_dates[i][0]).month) }"),"fieldname": f"{bet_dates[i][0]}","fieldtype": "Currency", "width": 100})
+			{ "label": _(f"{mon_dict.get(get_datetime(bet_dates[i][0]).month) }"),"fieldname": f"{bet_dates[i][0]}","fieldtype": "Currency", "width": 100 ,"precision":3})
 	columns+=[
-		{ "label": _("Total"),"fieldname": "total","fieldtype": "Currency", "width": 110}]
+		{ "label": _("Total"),"fieldname": "total","fieldtype": "Currency", "width": 110,"precision":3}]
 	lft,rgt = frappe.db.get_value("Item Group",'10000 Finish goods (F)',['lft','rgt'])
 	lft_allopathic,rgt_allopathic = frappe.db.get_value("Item Group",'1604 Allopathic  (F) Prolific',['lft','rgt'])
 	item_group_list = frappe.db.get_all('Item Group',{'lft': ['>=',lft],'rgt':['<=',rgt]},pluck="name")
@@ -42,7 +42,7 @@ def get_data(filters):
 		print(str(between_date[0]))
 		data = frappe.db.sql(f"""
 			SELECT 
-				sii.item_group, sum(sii.qty * sii.price_list_rate) as '{between_date[0]}'
+				sii.item_group, sum(sii.qty * sii.price_list_rate)/100000 as '{between_date[0]}'
 			FROM
 				`tabSales Invoice` as si
 			JOIN 
