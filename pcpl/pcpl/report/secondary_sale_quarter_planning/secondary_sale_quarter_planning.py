@@ -44,7 +44,7 @@ def get_last_terretory_data(filters={'year':'2023-2024'}):
 		zone_dict = {}
 		if row.get('parent_territory') not in perr_terr:
 			perr_terr.append(row.get('parent_territory'))
-			zone_dict.update({ 'target_amount':new_dict[row.parent_territory],'territory':row.parent_territory ,'parent_territory':frappe.db.get_value('Territory' , row.parent_territory , 'parent_territory')})
+			zone_dict.update({ 'target_amount':(new_dict[row.parent_territory])/100000,'territory':row.parent_territory ,'parent_territory':frappe.db.get_value('Territory' , row.parent_territory , 'parent_territory')})
 			new_data.append(zone_dict)
 	data = new_data
 	return data
@@ -95,13 +95,13 @@ def get_final_data(filters={'year':'2023-2024','quarter':'Quarter 1'}):
 			
 			duplicate_row.update(row)
 			sum_gross_sales  = sum(d.get('amount') for d in gross_sales) if gross_sales else 0
-			duplicate_row.update({'{}'.format(d):sum_gross_sales})
+			duplicate_row.update({'{}'.format(d):(sum_gross_sales)/100000})
 			total+=sum_gross_sales
 			if duplicate_row:
 				if not final_data.get((row.get('parent_territory'), row.get('territory'))):
 					final_data[(row.get('parent_territory'),row.get('territory'))]={}
 				final_data[(row.get('parent_territory'),row.get('territory'))].update(duplicate_row)
-			final_data[(row.get('parent_territory'),row.get('territory'))].update({'total':total})
+			final_data[(row.get('parent_territory'),row.get('territory'))].update({'total':(total)/100000})
 		for j in ['quarter_1','quarter_2','quarter_3','quarter_4']:
 			final_data[(row.get('parent_territory'),row.get('territory'))].update({'{}_share'.format(j):(final_data[(row.get('parent_territory'),row.get('territory'))].get(j)*100/final_data[(row.get('parent_territory'),row.get('territory'))].get('total'))})
 		final_data[(row.get('parent_territory'),row.get('territory'))].update({'difference':(final_data[(row.get('parent_territory'),row.get('territory'))].get('total')-final_data[(row.get('parent_territory'),row.get('territory'))].get('target_amount'))})

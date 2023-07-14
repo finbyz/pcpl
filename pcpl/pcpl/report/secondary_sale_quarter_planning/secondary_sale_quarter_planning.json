@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
  "creation": "2023-07-03 14:54:04.473445",
  "disable_prepared_report": 0,
@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-07-04 15:12:03.391838",
+ "modified": "2023-07-13 10:25:44.374896",
  "modified_by": "Administrator",
  "module": "Pcpl",
  "name": "Secondary Sale Quarter Planning",

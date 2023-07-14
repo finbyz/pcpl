@@ -35,13 +35,13 @@ def get_final_data(filters={"fiscal_year1":"2022-2023","fiscal_year2":"2023-2024
 		conditions = ''
 		conditions += " and si.territory in {} ".format(
 				"(" + ", ".join([f'"{l.name}"' for l in terr_list]) + ")")
-		net_sales_fiscal_year_1 = frappe.db.sql(f'''select sum(if(si.is_return=1,(sii.base_net_amount),(sii.qty * sii.price_list_rate))) as total_fiscal_year1 , si.customer, si.customer_city
+		net_sales_fiscal_year_1 = frappe.db.sql(f'''select sum(if(si.is_return=1,(sii.base_net_amount),(sii.qty * sii.price_list_rate)))/100000 as total_fiscal_year1 , si.customer, si.customer_city
 											From `tabSales Invoice` as si 
 											left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
 											Where si.docstatus = 1 {conditions} and si.posting_date between '{fiscal_year1_bet_dates[0][0]}' and '{fiscal_year1_bet_dates[0][1]}'
 											Group By si.customer
 											''',as_dict = 1)
-		net_sales_fiscal_year_2 = frappe.db.sql(f'''select sum(if(si.is_return=1,(sii.base_net_amount),(sii.qty * sii.price_list_rate))) as total_fiscal_year2,si.customer,si.customer_city
+		net_sales_fiscal_year_2 = frappe.db.sql(f'''select sum(if(si.is_return=1,(sii.base_net_amount),(sii.qty * sii.price_list_rate)))/100000 as total_fiscal_year2,si.customer,si.customer_city
 											From `tabSales Invoice` as si 
 											left join `tabSales Invoice Item` as sii ON si.name = sii.parent 
 											Where si.docstatus = 1 {conditions} and si.posting_date between '{fiscal_year2_bet_dates[0][0]}' and '{fiscal_year2_bet_dates[0][1]}'
@@ -99,23 +99,23 @@ def get_cols(filters=None):
 	{
 	"label": "Net Sales ({})".format(filters.get("fiscal_year1")),
 	"fieldname": "total_fiscal_year1",
-	"fieldtype": "Float",
+	"fieldtype": "Currency",
 	"width": 150,
-	"precision":2
+	"precision":3
 	},
 	{
 	"label": "Net Sales({})".format(filters.get("fiscal_year2")),
 	"fieldname": "total_fiscal_year2",
-	"fieldtype": "Float",
+	"fieldtype": "Currency",
 	"width": 150,
-	"precision":2
+	"precision":3
 	},
 	{
 	"label": "Difference (Net Sales({}) - Net Sales ({}))".format(filters.get('fiscal_year1'),filters.get('fiscal_year2')),
 	"fieldname": "difference",
-	"fieldtype": "Float",
+	"fieldtype": "Currency",
 	"width": 150,
-	"precision":2
+	"precision":3
 	},
 	{
 	"label": "Growth %",

@@ -62,7 +62,14 @@ frappe.query_reports["All In One"] = {
 			"options":"Monthly Distribution",
 			"width": "80",
 			"depends_on":"eval:doc.base_on == 'Quarterlly'",
-			"mandatory_depends_on":"eval:doc.base_on == 'Quarterlly'"
+			"mandatory_depends_on":"eval:doc.base_on == 'Quarterlly'",
+			"get_query": function(){
+				return {
+					filters:{
+						"fiscal_year": frappe.query_report.get_filter_value('year')
+					}
+				}
+			}
 		},
 		{
 			"fieldname":"select_month",

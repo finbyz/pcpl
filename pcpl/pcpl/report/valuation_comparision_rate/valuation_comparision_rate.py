@@ -30,13 +30,6 @@ def get_data(filters):
 		if row.name not in duplicate_row:
 			duplicate_row.append(row.name)
 			final_data.append(row)
-
-			
-
-			
-		
-
-	# frappe.msgprint(str(data))
 	return final_data
 def get_cols(filters):
 	

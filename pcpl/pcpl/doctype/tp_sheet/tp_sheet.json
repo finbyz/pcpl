@@ -1,0 +1,383 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-07-11 11:42:15.216523",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tps_for",
+  "buyer_name",
+  "city",
+  "column_break_bmigm",
+  "design__tps_stage",
+  "state",
+  "buyer_type",
+  "section_break_0pvc7",
+  "merchant",
+  "column_break_zl6fy",
+  "distributer",
+  "column_break_tnrgb",
+  "traders",
+  "column_break_cv5wv",
+  "manufacturer",
+  "section_break_wbsjn",
+  "area_of_selling",
+  "country",
+  "common__generic_name_of_product_int",
+  "brand_name",
+  "product_flavour__fragrance",
+  "product_color",
+  "product_shapefor_loz_only",
+  "weight__size",
+  "product_form",
+  "expiry__best_before",
+  "extra_months",
+  "total",
+  "general_use_of_product",
+  "container_specification",
+  "cap_specification",
+  "mfg_lic",
+  "work_mode",
+  "mfg__seller_detail_on_pm",
+  "autho_lett_for_product_mfg",
+  "product_passing",
+  "fsc",
+  "apply_as_dom_for_exp_req",
+  "target_products_sample",
+  "target_prod_image",
+  "combination_as_per",
+  "type",
+  "product_r_and_d",
+  "reason",
+  "tab_break_leis5",
+  "product_needs_to_exactly_match_the_sampleor_market_standard_of",
+  "compo_should_be_as_per_the_ref_image__sample",
+  "we_can_develop_ourselves_as_we_like_section",
+  "labeling_requirements_fro_sample",
+  "suggested_outer_packing_of_samples",
+  "suggested_container_specs_for_sampling_purpose",
+  "suggested_caps_specs_for_sampling_purpose_only",
+  "if_ingredients_are_provided_by_buyer_then_coa__stability",
+  "any_other_useful_info",
+  "sample_charges_received",
+  "debit_note_raised"
+ ],
+ "fields": [
+  {
+   "fieldname": "buyer_name",
+   "fieldtype": "Link",
+   "label": "Buyer Name",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "fieldname": "buyer_type",
+   "fieldtype": "Data",
+   "label": "Buyer Type"
+  },
+  {
+   "fieldname": "area_of_selling",
+   "fieldtype": "Data",
+   "label": "Area of Selling"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Data",
+   "label": "Country"
+  },
+  {
+   "fieldname": "brand_name",
+   "fieldtype": "Data",
+   "label": "Brand Name"
+  },
+  {
+   "fieldname": "product_flavour__fragrance",
+   "fieldtype": "Link",
+   "label": "Product Flavour / Fragrance",
+   "options": "Flavour"
+  },
+  {
+   "fieldname": "common__generic_name_of_product_int",
+   "fieldtype": "Data",
+   "label": "Common / Generic Name of Product Int."
+  },
+  {
+   "fetch_from": "product_flavour__fragrance.product_color",
+   "fieldname": "product_color",
+   "fieldtype": "Data",
+   "label": "Product Color"
+  },
+  {
+   "fetch_from": "product_flavour__fragrance.product_shapefor_loz_only",
+   "fieldname": "product_shapefor_loz_only",
+   "fieldtype": "Data",
+   "label": "Product Shape(For Loz Only)"
+  },
+  {
+   "fetch_from": "product_flavour__fragrance.weight",
+   "fieldname": "weight__size",
+   "fieldtype": "Data",
+   "label": "Weight / Size"
+  },
+  {
+   "fetch_from": "product_flavour__fragrance.product_form",
+   "fieldname": "product_form",
+   "fieldtype": "Data",
+   "label": "Product Form"
+  },
+  {
+   "fieldname": "expiry__best_before",
+   "fieldtype": "Data",
+   "label": "Expiry / Best Before"
+  },
+  {
+   "fieldname": "extra_months",
+   "fieldtype": "Data",
+   "label": "Extra Months"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Float",
+   "label": "Total"
+  },
+  {
+   "fieldname": "general_use_of_product",
+   "fieldtype": "Data",
+   "label": "General Use of Product"
+  },
+  {
+   "fieldname": "container_specification",
+   "fieldtype": "Data",
+   "label": "Container Specification"
+  },
+  {
+   "fieldname": "cap_specification",
+   "fieldtype": "Data",
+   "label": "Cap Specification"
+  },
+  {
+   "fieldname": "mfg_lic",
+   "fieldtype": "Data",
+   "label": "Mfg Lic."
+  },
+  {
+   "fieldname": "work_mode",
+   "fieldtype": "Data",
+   "label": "Work Mode"
+  },
+  {
+   "fieldname": "mfg__seller_detail_on_pm",
+   "fieldtype": "Data",
+   "label": "Mfg / Seller Detail on PM"
+  },
+  {
+   "fieldname": "autho_lett_for_product_mfg",
+   "fieldtype": "Data",
+   "label": "Autho. Lett for product mfg."
+  },
+  {
+   "fieldname": "product_passing",
+   "fieldtype": "Data",
+   "label": "Product Passing"
+  },
+  {
+   "fieldname": "fsc",
+   "fieldtype": "Data",
+   "label": "FSC"
+  },
+  {
+   "fieldname": "apply_as_dom_for_exp_req",
+   "fieldtype": "Data",
+   "label": "Apply as Dom for Exp Req"
+  },
+  {
+   "fieldname": "target_products_sample",
+   "fieldtype": "Data",
+   "label": "Target Product's Sample"
+  },
+  {
+   "fieldname": "target_prod_image",
+   "fieldtype": "Data",
+   "label": "Target Prod Image"
+  },
+  {
+   "fieldname": "combination_as_per",
+   "fieldtype": "Data",
+   "label": "Combination as per"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Data",
+   "label": "Type"
+  },
+  {
+   "fieldname": "product_r_and_d",
+   "fieldtype": "Data",
+   "label": "Product R and D"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Data",
+   "label": "Reason"
+  },
+  {
+   "fieldname": "tps_for",
+   "fieldtype": "Data",
+   "label": "TPS For"
+  },
+  {
+   "fieldname": "design__tps_stage",
+   "fieldtype": "Data",
+   "label": "Design / TPS Stage"
+  },
+  {
+   "fieldname": "tab_break_leis5",
+   "fieldtype": "Tab Break",
+   "label": "For Costing and Sampling Purposes"
+  },
+  {
+   "default": "0",
+   "fieldname": "product_needs_to_exactly_match_the_sampleor_market_standard_of",
+   "fieldtype": "Check",
+   "label": "Product Needs to Exactly Match the Sample(or Market Standard of)"
+  },
+  {
+   "default": "0",
+   "fieldname": "compo_should_be_as_per_the_ref_image__sample",
+   "fieldtype": "Check",
+   "label": "Compo should be as per the ref image / Sample "
+  },
+  {
+   "fieldname": "we_can_develop_ourselves_as_we_like_section",
+   "fieldtype": "Section Break",
+   "label": "We can Develop ourselves as we like"
+  },
+  {
+   "fieldname": "labeling_requirements_fro_sample",
+   "fieldtype": "Select",
+   "label": "Labeling Requirements fro Sample",
+   "options": "\nParty Name\nProduct\nBatch Details"
+  },
+  {
+   "fieldname": "suggested_outer_packing_of_samples",
+   "fieldtype": "Select",
+   "label": "Suggested Outer Packing of Samples",
+   "options": "\nCourier ready Boxes"
+  },
+  {
+   "fieldname": "suggested_container_specs_for_sampling_purpose",
+   "fieldtype": "Data",
+   "label": "Suggested Container specs for Sampling purpose"
+  },
+  {
+   "fieldname": "suggested_caps_specs_for_sampling_purpose_only",
+   "fieldtype": "Data",
+   "label": "Suggested Caps specs for Sampling purpose only"
+  },
+  {
+   "fieldname": "if_ingredients_are_provided_by_buyer_then_coa__stability",
+   "fieldtype": "Data",
+   "label": "If ingredients are provided by Buyer then COA / Stability "
+  },
+  {
+   "fieldname": "any_other_useful_info",
+   "fieldtype": "Small Text",
+   "label": "Any other useful Info"
+  },
+  {
+   "fieldname": "sample_charges_received",
+   "fieldtype": "Select",
+   "label": "Sample Charges Received",
+   "options": "Yes\nNo\nWaived"
+  },
+  {
+   "fieldname": "debit_note_raised",
+   "fieldtype": "Select",
+   "label": "Debit Note raised",
+   "options": "Yes\nNo\nNA"
+  },
+  {
+   "default": "0",
+   "fieldname": "merchant",
+   "fieldtype": "Check",
+   "label": "Merchant"
+  },
+  {
+   "default": "0",
+   "fieldname": "distributer",
+   "fieldtype": "Check",
+   "label": "Distributer"
+  },
+  {
+   "fieldname": "column_break_tnrgb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "traders",
+   "fieldtype": "Check",
+   "label": "Traders"
+  },
+  {
+   "default": "0",
+   "fieldname": "manufacturer",
+   "fieldtype": "Check",
+   "label": "Manufacturer"
+  },
+  {
+   "fieldname": "section_break_wbsjn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_0pvc7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zl6fy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cv5wv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_bmigm",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-11 15:30:40.004983",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "TP Sheet",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

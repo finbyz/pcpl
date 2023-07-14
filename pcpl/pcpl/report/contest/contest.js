@@ -5,14 +5,6 @@
 frappe.query_reports["Contest"] = {
 	"filters": [
 		{
-			"fieldname": "month",
-			"label": __("Month"),
-			"fieldtype": "Select",
-			"options" : ["January","February","March","April","May","June","July","August","September","Octomber","November","December"],
-			"depends_on":"eval:doc.base_on == 'Weekly'",
-			"mandatory_depends_on":"eval:doc.base_on == 'Weekly'",
-		},
-		{
 			"fieldname": "year",
 			"label": __("Year"),
 			"fieldtype": "Link",
@@ -41,6 +33,14 @@ frappe.query_reports["Contest"] = {
 			"reqd":1
 		},
 		{
+			"fieldname": "month",
+			"label": __("Month"),
+			"fieldtype": "Select",
+			"options" : ["January","February","March","April","May","June","July","August","September","Octomber","November","December"],
+			"depends_on":"eval:doc.base_on == 'Weekly'",
+			"mandatory_depends_on":"eval:doc.base_on == 'Weekly'",
+		},
+		{
 			"fieldname":"from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",
@@ -67,9 +67,7 @@ frappe.query_reports["Contest"] = {
 			"fieldtype": "Date",
 			"width": "80",
 			"depends_on":"eval:doc.base_on == 'Date Range'"
-		},	
-		
-		
+		},		
 		{
 			"fieldname":"quarter",
 			"label": __("Monthly Distribution"),
@@ -77,7 +75,14 @@ frappe.query_reports["Contest"] = {
 			"options":"Monthly Distribution",
 			"width": "80",
 			"depends_on":"eval:doc.base_on == 'Quarterlly'",
-			"mandatory_depends_on":"eval:doc.base_on == 'Quarterlly'"
+			"mandatory_depends_on":"eval:doc.base_on == 'Quarterlly'",
+			"get_query": function(){
+				return {
+					filters:{
+						"fiscal_year": frappe.query_report.get_filter_value('year')
+					}
+				}
+			}
 		},
 		{
 			"fieldname":"select_month",

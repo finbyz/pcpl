@@ -48,18 +48,18 @@ def get_data(filters):
 
 	for row in terr:
 		columns.append(
-			{ "label": _(f"{row.name} - {filters.get('fiscal_year1')}"),"fieldname": f"{row.name}_{filters.get('fiscal_year1')}","fieldtype": "Currency", "width": 150})
+			{ "label": _(f"{row.name} - {filters.get('fiscal_year1')}"),"fieldname": f"{row.name}_{filters.get('fiscal_year1')}","fieldtype": "Currency", "width": 150,"precision":3})
 		columns.append(
-			{ "label": _(f"{row.name} - {filters.get('fiscal_year2')}"),"fieldname": f"{row.name}_{filters.get('fiscal_year2')}","fieldtype": "Currency", "width": 150})
+			{ "label": _(f"{row.name} - {filters.get('fiscal_year2')}"),"fieldname": f"{row.name}_{filters.get('fiscal_year2')}","fieldtype": "Currency", "width": 150,"precision":3})
 	
 		terr_dict.update({row.name : [row.lft, row.rgt]})
 
 	columns.append(
-			{ "label": _(f"Total - {filters.get('fiscal_year1')}"),"fieldname": f"Total_{filters.get('fiscal_year1')}","fieldtype": "Currency", "width": 180})
+			{ "label": _(f"Total - {filters.get('fiscal_year1')}"),"fieldname": f"Total_{filters.get('fiscal_year1')}","fieldtype": "Currency", "width": 180,"precision":3})
 	columns.append(
-			{ "label": _(f"Total - {filters.get('fiscal_year2')}"),"fieldname": f"Total_{filters.get('fiscal_year2')}","fieldtype": "Currency", "width": 180})
+			{ "label": _(f"Total - {filters.get('fiscal_year2')}"),"fieldname": f"Total_{filters.get('fiscal_year2')}","fieldtype": "Currency", "width": 180,"precision":3})
 	columns.append(
-			{ "label": _("Difference"),"fieldname": "diff","fieldtype": "Currency", "width": 200})
+			{ "label": _("Difference"),"fieldname": "diff","fieldtype": "Currency", "width": 200,"precision":3})
 
 	bet_dates1 = get_period_date_ranges(period = "Monthly", fiscal_year = filters.get("fiscal_year1"))
 	bet_dates2 = get_period_date_ranges(period = "Monthly", fiscal_year = filters.get("fiscal_year2"))
@@ -82,7 +82,7 @@ def get_data(filters):
 		for terr in terr_dict:
 			si_data.append(frappe.db.sql(f"""
 				SELECT 
-					sum(if({is_return_cond},{if_is_return_cond},{else_is_return_cond})) as total , '{terr}_{filters.get('fiscal_year1')}' as territory, '{filters.get('fiscal_year1')}' as fiscal_year
+					(sum(if({is_return_cond},{if_is_return_cond},{else_is_return_cond}))/100000) as total , '{terr}_{filters.get('fiscal_year1')}' as territory, '{filters.get('fiscal_year1')}' as fiscal_year
 				FROM
 					`tab{doctype}` as si
 				left join
@@ -93,7 +93,7 @@ def get_data(filters):
 
 			si_data.append(frappe.db.sql(f"""
 				SELECT 
-					sum(if({is_return_cond},{if_is_return_cond},{else_is_return_cond})) as total , '{terr}_{filters.get('fiscal_year2')}' as territory, '{filters.get('fiscal_year2')}' as fiscal_year
+					(sum(if({is_return_cond},{if_is_return_cond},{else_is_return_cond}))/100000) as total , '{terr}_{filters.get('fiscal_year2')}' as territory, '{filters.get('fiscal_year2')}' as fiscal_year
 				FROM
 					`tab{doctype}` as si
 				left join

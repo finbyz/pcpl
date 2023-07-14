@@ -213,9 +213,9 @@ def get_final_data(filters):
             
             
             duplicate_row.update(row)
-            sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
+            sum_gross_sales  = (sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales)/100000) if gross_sales else 0
             duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_gross_sales})
-            sum_pending_sales  = sum(d.get('pending_qty') * d.get('price_list_rate') for d in pending_sales) if pending_sales else 0
+            sum_pending_sales  = (sum(d.get('pending_qty') * d.get('price_list_rate') for d in pending_sales)/100000) if pending_sales else 0
             duplicate_row.update({'{}-to-{}pending_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_pending_sales})
 
 

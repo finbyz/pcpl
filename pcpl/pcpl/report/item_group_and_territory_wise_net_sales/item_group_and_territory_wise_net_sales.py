@@ -25,9 +25,9 @@ def get_data(filters):
 	terr_dict = {}
 	for row in terr:
 		columns.append(
-			{ "label": _(f"{row.name} Amount"),"fieldname": f"{row.name}_amount","fieldtype": "Currency", "width": 300})
+			{ "label": _(f"{row.name} Amount"),"fieldname": f"{row.name}_amount","fieldtype": "Currency", "width": 100,"precision":3})
 		columns.append(
-			{ "label": _(f"{row.name} Share"),"fieldname": f"{row.name}_share","fieldtype": "Percent","width": 300}
+			{ "label": _(f"{row.name} Share"),"fieldname": f"{row.name}_share","fieldtype": "Percent","width": 100}
 		)
 		terr_dict.update({row.name : [row.lft, row.rgt]})
 
@@ -84,6 +84,8 @@ def get_data(filters):
 					new_data[row][gr].update({f"{gr}_share" : (flt(new_data[row][gr][f"{gr}_amount"]) * 100) / flt(total_amount[gr])})
 				else:
 					new_data[row][gr].update({f"{gr}_share" :0})
+				if (flt(new_data[row][gr][f"{gr}_amount"]))!=0 :
+					new_data[row][gr].update({f"{gr}_amount" : (flt(new_data[row][gr][f"{gr}_amount"])) / 100000})
 				final_dict[row].update(new_data[row][gr])
 
 	for row in final_dict:
