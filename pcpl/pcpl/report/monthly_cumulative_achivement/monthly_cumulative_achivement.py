@@ -16,7 +16,7 @@ def execute(filters = None):
 
 def get_last_terretory_data(filters = {'year':'2023-2024' , 'base_on':'Monthly' , 'group_by':'Zone'}):
 
-    data = frappe.db.sql(f''' SELECT te.name as territory , td.target_amount , te.parent_territory , mdp.percentage_allocation , mdp.month, (td.target_amount * mdp.percentage_allocation)/100 as monthly_target
+    data = frappe.db.sql(f''' SELECT te.name as territory , td.target_amount , te.parent_territory , mdp.percentage_allocation , mdp.month, (td.target_amount * mdp.percentage_allocation)/10000000 as monthly_target
                             From `tabTerritory` as te
                             left join `tabTarget Detail` as td ON td.parent = te.name
                             left join `tabMonthly Distribution Percentage` as mdp ON td.distribution_id = mdp.parent
@@ -64,7 +64,7 @@ end''',as_dict=1)
         conditions = ""
         if filters.get('year'):
             conditions += f" and td.fiscal_year = '{filters.get('year')}'"
-        data = frappe.db.sql(f""" Select sum(td.target_amount) as target_amount , te.parent_territory as territory
+        data = frappe.db.sql(f""" Select (sum(td.target_amount))/100000 as target_amount , te.parent_territory as territory
                 From `tabTerritory` as te
                 left join `tabTarget Detail` as td ON td.parent = te.name
                 where te.is_group = 0 and td.target_amount > 0 and is_secondary_ = 0  {conditions}
@@ -266,8 +266,8 @@ def get_final_data(filters):
 
             duplicate_row.update(row)
       
-            sales_return_total = sum(d.get('total')  for d in sales_return) if sales_return else 0
-            sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
+            sales_return_total = (sum(d.get('total')  for d in sales_return))/100000 if sales_return else 0
+            sum_gross_sales  = (sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales))/100000 if gross_sales else 0
             NS = (sum_gross_sales)+(sales_return_total)
             total_ns += NS
             duplicate_row.update({'{}-to-{}ns'.format(d.get('period_start_date') , d.get('period_end_date')):total_ns})
@@ -275,7 +275,7 @@ def get_final_data(filters):
             from frappe.utils import flt, get_datetime
             # ach = (NS / row.get('target_amount')) if row.get('target_amount') else 0
             t='{}_target'.format(mon_dict.get(get_datetime(d.get('period_start_date')).month))
-            ach = (total_ns/row.get(t)) if row.get(t) else 0
+            ach = (total_ns/row.get(t)*100) if row.get(t) else 0
             # total_ach += ach
             duplicate_row.update({'{}-to-{}ach'.format(d.get('period_start_date') , d.get('period_end_date')):ach})
           

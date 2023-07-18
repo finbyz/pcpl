@@ -37,7 +37,7 @@ def get_last_terretory_data(filters ):
         conditions += f" and td.fiscal_year = '{filters.get('year')}'"
         conditions += f" and md.fiscal_year = '{filters.get('year')}'"
     
-    data = frappe.db.sql(f''' SELECT te.name as territory , td.target_amount , te.parent_territory , mdp.percentage_allocation , mdp.month, (td.target_amount * mdp.percentage_allocation)/100 as monthly_target
+    data = frappe.db.sql(f''' SELECT te.name as territory ,( td.target_amount)/100000 as target_amount , te.parent_territory , mdp.percentage_allocation , mdp.month, (td.target_amount * mdp.percentage_allocation)/10000000 as monthly_target
                             From `tabTerritory` as te
                             left join `tabTarget Detail` as td ON td.parent = te.name
                             left join `tabMonthly Distribution Percentage` as mdp ON td.distribution_id = mdp.parent
@@ -50,7 +50,7 @@ def get_last_terretory_data(filters ):
         conditions = ""
         if filters.get('year'):
             conditions += f" and td.fiscal_year = '{filters.get('year')}'"
-        data = frappe.db.sql(f""" Select sum(td.target_amount) as target_amount , te.parent_territory as territory
+        data = frappe.db.sql(f""" Select (sum(td.target_amount))/100000 as target_amount , te.parent_territory as territory
                 From `tabTerritory` as te
                 left join `tabTarget Detail` as td ON td.parent = te.name
                 where te.is_group = 0 and td.target_amount > 0 and is_secondary_ = 0  {conditions}
@@ -269,13 +269,13 @@ def get_final_data(filters):
                                             Where si.status = 'Draft' and si.docstatus = 1 and is_return = 1 {conditions} {date_condi}  ''',as_dict = 1)
 
             duplicate_row.update(row)
-            sum_gross_sales  = sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales) if gross_sales else 0
+            sum_gross_sales  = (sum(d.get('qty') * d.get('price_list_rate') for d in gross_sales)/100000) if gross_sales else 0
             duplicate_row.update({'{}-to-{}gross_sales'.format(d.get('period_start_date') , d.get('period_end_date')):sum_gross_sales, 'week' : '{}-to-{}'.format(d.get('period_start_date') , d.get('period_end_date'))})
             gross_sa += sum_gross_sales
-            sales_return_total = sum(d.get('total') for d in sales_return) if sales_return else 0
+            sales_return_total = (sum(d.get('total') for d in sales_return)/100000) if sales_return else 0
             duplicate_row.update({'{}-to-{}sales_return'.format(d.get('period_start_date') , d.get('period_end_date')):sales_return_total})
             return_cn += sales_return_total
-            total_sales_return_draft = sum(d.get('qty') * d.get('price_list_rate') for d in sales_return_draft) if sales_return_draft else 0
+            total_sales_return_draft = (sum(d.get('qty') * d.get('price_list_rate') for d in sales_return_draft)/100000) if sales_return_draft else 0
             duplicate_row.update({'{}-to-{}sales_return_draft'.format(d.get('period_start_date') , d.get('period_end_date')):total_sales_return_draft})
             NS = (sum_gross_sales) + (sales_return_total)
             total_ns += NS
