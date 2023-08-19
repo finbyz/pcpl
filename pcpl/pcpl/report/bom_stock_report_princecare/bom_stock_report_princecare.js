@@ -6,7 +6,7 @@ frappe.query_reports["BOM Stock Report Princecare"] = {
 	"filters": [
 		{
 			"fieldname":"name",
-			"lable":__("BOM"),
+			"label":__("BOM"),
 			"fieldtype":"Link",
 			"options":"BOM",
 			"reqd": 1,
@@ -18,7 +18,7 @@ frappe.query_reports["BOM Stock Report Princecare"] = {
 		},
 		{
 			"fieldname":"qty_to_produce",
-			"lable":__("Qty to Produce"),
+			"label":__("Qty to Produce"),
 			"fieldtype":"Float",
 			"reqd": 1
 		}
