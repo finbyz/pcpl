@@ -121,7 +121,7 @@ doc_events = {
         "before_naming": "finbyzerp.api.before_naming",
     },
     "Sales Order":{
-        "before_validate": ["pcpl.api.set_sales_taxes_and_charges", "pcpl.pcpl.doc_events.sales_order.before_validate"],
+        "before_validate": ["pcpl.api.set_sales_taxes_and_charges", "pcpl.pcpl.doc_events.sales_order.before_validate","pcpl.api.update_discounted_price"],
         "on_submit" : "pcpl.pcpl.doc_events.sales_order.on_submit"
     },
     "User":{

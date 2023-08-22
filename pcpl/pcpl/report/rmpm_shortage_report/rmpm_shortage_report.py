@@ -91,12 +91,11 @@ def get_columns():
 
 def get_bin_list(filters):
 	conditions = []
-
 	if filters.item_code:
 		conditions.append("bin.item_code = '%s' "%filters.item_code)
 
 	if filters.warehouse:
-		warehouse_details = frappe.db.get_value("bin.Warehouse", filters.warehouse, ["lft", "rgt"], as_dict=1)
+		warehouse_details = frappe.db.get_value("Warehouse", filters.warehouse, ["lft", "rgt"], as_dict=1)
 
 		if warehouse_details:
 			conditions.append(" exists (select name from `tabWarehouse` wh \
@@ -107,7 +106,6 @@ def get_bin_list(filters):
 	# 	select item_code, warehouse, actual_qty, planned_qty, indented_qty,
 	# 	ordered_qty, reserved_qty, reserved_qty_for_production, reserved_qty_for_sub_contract, projected_qty
 	# 	from tabBin bin {conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
-
 	bin_list = frappe.db.sql("""
 		select bin.item_code, bin.warehouse, bin.actual_qty, bin.planned_qty, bin.indented_qty,
 		bin.ordered_qty, bin.reserved_qty, bin.reserved_qty_for_production, bin.reserved_qty_for_sub_contract, bin.projected_qty
@@ -117,7 +115,7 @@ def get_bin_list(filters):
 			bin.ordered_qty = 0 and (bin.warehouse = 'Other WH - PC' or bin.warehouse = 'Stores - PS')
 		ORDER BY
 			item.parent_item_group
-		{conditions}""".format(conditions=" where " + " and ".join(conditions) if conditions else ""), as_dict=1)
+		""", as_dict=1)
 
 	return bin_list
 
