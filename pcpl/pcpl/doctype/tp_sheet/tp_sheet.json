@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "TP-.#####",
  "creation": "2023-07-11 11:42:15.216523",
  "default_view": "List",
  "doctype": "DocType",
@@ -13,7 +14,6 @@
   "column_break_bmigm",
   "design__tps_stage",
   "state",
-  "buyer_type",
   "section_break_0pvc7",
   "merchant",
   "column_break_zl6fy",
@@ -37,6 +37,7 @@
   "total",
   "general_use_of_product",
   "container_specification",
+  "column_break_oczb7",
   "cap_specification",
   "mfg_lic",
   "work_mode",
@@ -53,16 +54,55 @@
   "reason",
   "tab_break_leis5",
   "product_needs_to_exactly_match_the_sampleor_market_standard_of",
-  "compo_should_be_as_per_the_ref_image__sample",
   "we_can_develop_ourselves_as_we_like_section",
+  "compo_should_be_as_per_the_ref_image__sample",
   "labeling_requirements_fro_sample",
   "suggested_outer_packing_of_samples",
   "suggested_container_specs_for_sampling_purpose",
   "suggested_caps_specs_for_sampling_purpose_only",
+  "column_break_xbpka",
   "if_ingredients_are_provided_by_buyer_then_coa__stability",
-  "any_other_useful_info",
   "sample_charges_received",
-  "debit_note_raised"
+  "debit_note_raised",
+  "any_other_useful_info",
+  "sales_section",
+  "matter_to_inkjet",
+  "batch_no",
+  "mfg_date",
+  "column_break_xenyd",
+  "exp_date",
+  "mrp",
+  "proposed_cbm",
+  "in_cm__kg",
+  "packing_section",
+  "pack_type",
+  "pack_name",
+  "units_total",
+  "specs",
+  "column_break_92huw",
+  "req_type",
+  "count",
+  "remarks",
+  "costing_tab",
+  "office_use",
+  "pack_name_costing",
+  "moq",
+  "frst_ordr_qty",
+  "buyers_remarks",
+  "column_break_xd7mf",
+  "mrp_1",
+  "barcode",
+  "serial",
+  "inv__pcs",
+  "sellers_remarks",
+  "gen_section",
+  "prepared_by",
+  "checked_by",
+  "auth_by",
+  "column_break_hkike",
+  "prepared_date",
+  "checked_date",
+  "auth_date"
  ],
  "fields": [
   {
@@ -82,19 +122,16 @@
    "label": "State"
   },
   {
-   "fieldname": "buyer_type",
-   "fieldtype": "Data",
-   "label": "Buyer Type"
-  },
-  {
    "fieldname": "area_of_selling",
-   "fieldtype": "Data",
-   "label": "Area of Selling"
+   "fieldtype": "Select",
+   "label": "Area of Selling",
+   "options": "Domestic\nExports"
   },
   {
    "fieldname": "country",
-   "fieldtype": "Data",
-   "label": "Country"
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
   },
   {
    "fieldname": "brand_name",
@@ -168,13 +205,15 @@
   },
   {
    "fieldname": "mfg_lic",
-   "fieldtype": "Data",
-   "label": "Mfg Lic."
+   "fieldtype": "Select",
+   "label": "Mfg Lic.",
+   "options": "HERBAL\nFOOD\nCOSMETIC\nFOOD OR HERBAL\nHERBAL OR COSMETIC"
   },
   {
    "fieldname": "work_mode",
-   "fieldtype": "Data",
-   "label": "Work Mode"
+   "fieldtype": "Select",
+   "label": "Work Mode",
+   "options": "Principle to Principle\nNeutral Code\nLoan License"
   },
   {
    "fieldname": "mfg__seller_detail_on_pm",
@@ -183,18 +222,21 @@
   },
   {
    "fieldname": "autho_lett_for_product_mfg",
-   "fieldtype": "Data",
-   "label": "Autho. Lett for product mfg."
+   "fieldtype": "Select",
+   "label": "Autho. Lett for product mfg.",
+   "options": "Pending\nReceived\nPending for Food\nUnnecessary as Food\nProceed as Our Brand"
   },
   {
    "fieldname": "product_passing",
-   "fieldtype": "Data",
-   "label": "Product Passing"
+   "fieldtype": "Select",
+   "label": "Product Passing",
+   "options": "Pending From Seller\nNA as Food\nReceived\nExisting"
   },
   {
    "fieldname": "fsc",
-   "fieldtype": "Data",
-   "label": "FSC"
+   "fieldtype": "Select",
+   "label": "FSC",
+   "options": "Yes\nNo"
   },
   {
    "fieldname": "apply_as_dom_for_exp_req",
@@ -203,18 +245,21 @@
   },
   {
    "fieldname": "target_products_sample",
-   "fieldtype": "Data",
-   "label": "Target Product's Sample"
+   "fieldtype": "Select",
+   "label": "Target Product's Sample",
+   "options": "Pending\nReceived\nExisting\nNot Available"
   },
   {
    "fieldname": "target_prod_image",
-   "fieldtype": "Data",
-   "label": "Target Prod Image"
+   "fieldtype": "Select",
+   "label": "Target Prod Image",
+   "options": "Pending\nReceived\nExisting\nNot Available"
   },
   {
    "fieldname": "combination_as_per",
-   "fieldtype": "Data",
-   "label": "Combination as per"
+   "fieldtype": "Select",
+   "label": "Combination as per",
+   "options": "Seller  - Develop\nSeller - Existing\nSeller - Modify Existing\nBuyer"
   },
   {
    "fieldname": "type",
@@ -223,13 +268,15 @@
   },
   {
    "fieldname": "product_r_and_d",
-   "fieldtype": "Data",
-   "label": "Product R and D"
+   "fieldtype": "Select",
+   "label": "Product R and D",
+   "options": "Pending\nCompleted\nNA As Food\nNA as Cosmetic\nNA"
   },
   {
    "fieldname": "reason",
-   "fieldtype": "Data",
-   "label": "Reason"
+   "fieldtype": "Select",
+   "label": "Reason",
+   "options": "\nFor QC & PP\nFor Party Approval\nFor Costing"
   },
   {
    "fieldname": "tps_for",
@@ -238,8 +285,9 @@
   },
   {
    "fieldname": "design__tps_stage",
-   "fieldtype": "Data",
-   "label": "Design / TPS Stage"
+   "fieldtype": "Select",
+   "label": "Design / TPS Stage",
+   "options": "Pre-Final\nDummy\nFinal"
   },
   {
    "fieldname": "tab_break_leis5",
@@ -253,10 +301,10 @@
    "label": "Product Needs to Exactly Match the Sample(or Market Standard of)"
   },
   {
-   "default": "0",
    "fieldname": "compo_should_be_as_per_the_ref_image__sample",
-   "fieldtype": "Check",
-   "label": "Compo should be as per the ref image / Sample "
+   "fieldtype": "Select",
+   "label": "Compo should be as per the ref image / Sample ",
+   "options": "Follow formula Exactly\nMake minor changes as required in the formula\nFormula is for ref. only. Make best possible by us"
   },
   {
    "fieldname": "we_can_develop_ourselves_as_we_like_section",
@@ -341,7 +389,8 @@
   },
   {
    "fieldname": "section_break_0pvc7",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Buyer Type"
   },
   {
    "fieldname": "column_break_zl6fy",
@@ -354,14 +403,218 @@
   {
    "fieldname": "column_break_bmigm",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_oczb7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xbpka",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sales_section",
+   "fieldtype": "Section Break",
+   "label": "Sales"
+  },
+  {
+   "fieldname": "matter_to_inkjet",
+   "fieldtype": "Data",
+   "label": "Matter to Inkjet"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Data",
+   "label": "Batch No"
+  },
+  {
+   "fieldname": "mfg_date",
+   "fieldtype": "Date",
+   "label": "Mfg Date"
+  },
+  {
+   "fieldname": "exp_date",
+   "fieldtype": "Date",
+   "label": "Exp Date"
+  },
+  {
+   "fieldname": "mrp",
+   "fieldtype": "Data",
+   "label": "MRP"
+  },
+  {
+   "fieldname": "proposed_cbm",
+   "fieldtype": "Data",
+   "label": "Proposed CBM"
+  },
+  {
+   "fieldname": "in_cm__kg",
+   "fieldtype": "Data",
+   "label": "In CM / KG"
+  },
+  {
+   "fieldname": "column_break_xenyd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "packing_section",
+   "fieldtype": "Section Break",
+   "label": "Packing"
+  },
+  {
+   "fieldname": "pack_type",
+   "fieldtype": "Select",
+   "label": "Pack Type",
+   "options": "Primary\nSecondary\nTertiary\nShipper\nOther"
+  },
+  {
+   "fieldname": "pack_name",
+   "fieldtype": "Data",
+   "label": "Pack Name"
+  },
+  {
+   "fieldname": "units_total",
+   "fieldtype": "Float",
+   "label": "Units Total"
+  },
+  {
+   "fieldname": "column_break_92huw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "specs",
+   "fieldtype": "Data",
+   "label": "Specs"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "req_type",
+   "fieldtype": "Data",
+   "label": "Req Type"
+  },
+  {
+   "fieldname": "count",
+   "fieldtype": "Data",
+   "label": "Count"
+  },
+  {
+   "fieldname": "costing_tab",
+   "fieldtype": "Tab Break",
+   "label": "Costing"
+  },
+  {
+   "fieldname": "office_use",
+   "fieldtype": "Data",
+   "label": "Office Use"
+  },
+  {
+   "fieldname": "pack_name_costing",
+   "fieldtype": "Data",
+   "label": "Pack Name"
+  },
+  {
+   "fieldname": "moq",
+   "fieldtype": "Select",
+   "label": "MOQ",
+   "options": "Primary\nSecondary\nTertiary\nShipper"
+  },
+  {
+   "fieldname": "frst_ordr_qty",
+   "fieldtype": "Select",
+   "label": "Frst Ordr Qty",
+   "options": "Primary\nSecondary\nTertiary\nShipper"
+  },
+  {
+   "fieldname": "inv__pcs",
+   "fieldtype": "Data",
+   "label": "Inv / pcs"
+  },
+  {
+   "fieldname": "column_break_xd7mf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "barcode",
+   "fieldtype": "Select",
+   "label": "Barcode",
+   "options": "\nLINEAR SEC\nLINEAR"
+  },
+  {
+   "fieldname": "serial",
+   "fieldtype": "Select",
+   "label": "Serial",
+   "options": "\nAS PER DD"
+  },
+  {
+   "fieldname": "buyers_remarks",
+   "fieldtype": "Small Text",
+   "label": "Buyer's Remarks"
+  },
+  {
+   "fieldname": "sellers_remarks",
+   "fieldtype": "Small Text",
+   "label": "Seller's Remarks"
+  },
+  {
+   "fieldname": "gen_section",
+   "fieldtype": "Section Break",
+   "label": "Gen"
+  },
+  {
+   "fieldname": "prepared_by",
+   "fieldtype": "Link",
+   "label": "Prepared By",
+   "options": "User"
+  },
+  {
+   "fieldname": "checked_by",
+   "fieldtype": "Link",
+   "label": "Checked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "column_break_hkike",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "auth_by",
+   "fieldtype": "Link",
+   "label": "Auth By",
+   "options": "User"
+  },
+  {
+   "fieldname": "prepared_date",
+   "fieldtype": "Date",
+   "label": "Prepared Date"
+  },
+  {
+   "fieldname": "checked_date",
+   "fieldtype": "Date",
+   "label": "Checked Date"
+  },
+  {
+   "fieldname": "auth_date",
+   "fieldtype": "Date",
+   "label": "Auth Date"
+  },
+  {
+   "fieldname": "mrp_1",
+   "fieldtype": "Currency",
+   "label": "MRP",
+   "options": "currency"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-11 15:30:40.004983",
+ "modified": "2023-10-03 16:53:23.070974",
  "modified_by": "Administrator",
  "module": "Pcpl",
  "name": "TP Sheet",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -373,6 +626,31 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Local Admin",
    "share": 1,
    "write": 1
   }

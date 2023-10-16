@@ -104,9 +104,9 @@ def get_period_date_ranges(filters):
 	return period_date_ranges
 
 
-def get_sub_division_wise_data(filters = {'year' : '2023-2024' , 'base_on':'Monthly' , 'group_by':'Zone' ,'select_month':['April']}):
+# def get_sub_division_wise_data(filters = {'year' : '2023-2024' , 'base_on':'Monthly' , 'group_by':'Zone' ,'select_month':['April']}):
 
-	data = frappe.db.sql(f''' SELECT te.name as territory , td.target_amount , te.parent_territory 
-							left join `tabTarget Detail` as td ON td.parent = te.name and td.fiscal_year = '{filters.get('year')}'"
-							where td.target_amount > 0  ''',as_dict=1)
-    monthly_distribution_data = frappe.db.sql(f""" Select   """)
+# 	data = frappe.db.sql(f''' SELECT te.name as territory , td.target_amount , te.parent_territory 
+# 							left join `tabTarget Detail` as td ON td.parent = te.name and td.fiscal_year = '{filters.get('year')}'"
+# 							where td.target_amount > 0  ''',as_dict=1)
+#     monthly_distribution_data = frappe.db.sql(f""" Select   """)

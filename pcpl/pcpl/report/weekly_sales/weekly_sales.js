@@ -60,8 +60,9 @@ frappe.query_reports["Weekly Sales"] = {
 			"fieldtype": "Link",
 			"options":"Monthly Distribution",
 			"width": "80",
-			"depends_on":"eval:doc.base_on == 'Quarterlly'",
-			"mandatory_depends_on":"eval:doc.base_on == 'Quarterlly'",
+			// "reqd":0,
+			"depends_on":"eval:doc.base_on =='Quarterlly'",
+			"mandator_depends_on":"eval:doc.base_on =='Quarterlly'",
 			"get_query": function(){
 				return {
 					filters:{
@@ -79,6 +80,6 @@ frappe.query_reports["Weekly Sales"] = {
 			"depends_on":"eval:doc.base_on == 'Monthly'",
 			"mandatory_depends_on":"eval:doc.base_on == 'Monthly'"
 			
-		},
+		}
 	]
 };
