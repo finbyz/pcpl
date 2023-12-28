@@ -1,5 +1,15 @@
 frappe.ui.form.on("Sales Order", {
-    naming_series: function(frm){
+    refresh: function(frm){
+        frm.set_query("project", function() {
+			return {
+				filters : {
+                    "company": frm.doc.company,
+					"is_active": "Yes"
+                }
+            }
+        })
+    },
+	naming_series: function(frm){
         frm.set_query("customer", function() {
 			return {
 				filters : {

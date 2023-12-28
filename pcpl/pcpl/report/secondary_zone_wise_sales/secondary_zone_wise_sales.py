@@ -10,7 +10,7 @@ def execute(filters=None):
 
 def get_columns(filters):
 	columns = [
-		{"label": _("Invoice No"), "fieldname": "invoice_no", "fieldtype": "Link", "options": "Sales Invoice", "width": 130},
+		{"label": _("Invoice No"), "fieldname": "invoice_no", "fieldtype": "Link", "options": "Sales Secondary", "width": 130},
 		{"label": _("Posting Date"), "fieldname": "posting_date", "fieldtype": "Date", "width": 100},
 		{"label": _("Zone"), "fieldname": "zone", "fieldtype": "Link", "options": "Customer Group", "width": 100},
 		{"label": _("Devision"), "fieldname": "devision", "fieldtype": "Link", "options": "Customer Group", "width": 100},

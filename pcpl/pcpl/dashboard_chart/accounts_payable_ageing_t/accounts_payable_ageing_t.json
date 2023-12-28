@@ -1,0 +1,34 @@
+{
+ "chart_name": "Accounts Payable Ageing T",
+ "chart_type": "Report",
+ "creation": "2023-07-07 14:46:29.330952",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "document_type": "Purchase Invoice",
+ "dynamic_filters_json": "{\"company\":\"frappe.defaults.get_user_default(\\\"Company\\\")\",\"report_date\":\"frappe.datetime.now_date()\"}",
+ "filters_json": "{\"range1\":30,\"range2\":60,\"range3\":90,\"range4\":120,\"group_by_party\":0,\"based_on_payment_terms\":0,\"show_remarks\":0,\"show_future_payments\":0,\"report_date\":\"2023-12-28\"}",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "modified": "2023-12-28 10:16:43.995452",
+ "modified_by": "Administrator",
+ "module": "Pcpl",
+ "name": "Accounts Payable Ageing T",
+ "number_of_groups": 0,
+ "owner": "Administrator",
+ "report_name": "Accounts Payable",
+ "roles": [],
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Bar",
+ "use_report_chart": 0,
+ "x_field": "due_date",
+ "y_axis": [
+  {
+   "color": "#fc0d0d",
+   "y_field": "invoiced"
+  }
+ ]
+}
