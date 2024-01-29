@@ -133,8 +133,10 @@ frappe.ui.form.on("Sales Invoice", {
                 }
             }
         })
-        if(frm.doc.naming_series=="SIA-2223-.####")
-            frm.set_value("income_account","Sales Allopathic - PC")
+        if(frm.doc.naming_series=="CN-.fiscal.-.####")
+            frm.set_value("income_account","Sales Return - PC")
+        if(frm.doc.naming_series=="CNG-.fiscal.-.####")
+            frm.set_value("income_account","Sales Return - PC")
     }
 })
 
