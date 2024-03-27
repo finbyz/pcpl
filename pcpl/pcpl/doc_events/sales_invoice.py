@@ -135,7 +135,8 @@ def set_income_account(self):
             row.income_account = self.income_account
 
 def tax_validation(self):
-    if self.gst_category and self.gst_category == "Registered Regular" and not self.is_return and self.total_taxes_and_charges <= 0 and not self.invoice_for_free_item and not self.is_exempted:
+    # and not self.is_exempted
+    if self.gst_category and self.gst_category == "Registered Regular" and not self.is_return and self.total_taxes_and_charges <= 0 and not self.invoice_for_free_item:
         frappe.throw("Taxes has not applied.")
 
 #override from finbyzerp

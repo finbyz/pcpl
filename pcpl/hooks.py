@@ -159,9 +159,10 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "pcpl.event.get_events"
-# }
+override_whitelisted_methods = {
+	"frappe.desk.search.search_widget": "pcpl.api.search_widget",
+	"frappe.desk.search.search_link": "pcpl.api.search_link",
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
