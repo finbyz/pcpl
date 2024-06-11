@@ -87,10 +87,10 @@ def validate(self, method):
     # 					)
 def before_validate(self,method):
     for d in self.get('items'):
-        if(d.price_list_rate != 0):
-            d.gross_amount = d.qty * d.price_list_rate
-        if(d.gross_amount != 0):
-            d.discount_amount_total = (flt(d.gross_amount) * flt(d.discount_percentage))/100
+        # if(d.price_list_rate != 0):
+        d.gross_amount = d.qty * d.price_list_rate
+        # if(d.gross_amount != 0):
+        d.discount_amount_total = (flt(d.gross_amount) * flt(d.discount_percentage))/100
         if(d.item_tax_template == "CGST AND SGST 18 %"):
             d.gst_amount = d.amount * 0.18
         if(d.item_tax_template == "CGST AND SGST 28 %"):

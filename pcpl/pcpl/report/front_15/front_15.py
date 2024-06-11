@@ -13,6 +13,8 @@ def execute(filters=None):
 
 def get_columns():
 	columns = [
+		{ "label": _("Zone"),"fieldname": "zone","fieldtype": "Link","options" : "Customer Group", "width": 100},
+		{ "label": _("Division"),"fieldname": "customer_group","fieldtype": "Link","options" : "Customer Group", "width": 100},
 		{ "label": _("Customer Name"),"fieldname": "customer","fieldtype": "Link","options" : "Customer", "width": 300},
 		{ "label": _("City"),"fieldname": "city","fieldtype": "Data", "width": 300},
 		{ "label": _("Sales Figure"),"fieldname": "sales_figure","fieldtype": "Currency", "width": 300},
@@ -40,13 +42,17 @@ def get_data(filters):
 
 	data = frappe.db.sql(f"""
 		SELECT 
-			si.customer, si.customer_city as city, GROUP_CONCAT(DISTINCT st.sales_person) as sales_person, si.place_of_supply, SUM(si.total) as sales_figure
+			cg.parent_customer_group as zone, si.customer_group, si.customer, si.customer_city as city, GROUP_CONCAT(DISTINCT st.sales_person) as sales_person, si.place_of_supply, SUM(si.total) as sales_figure
 		FROM
 			`tabSales Invoice` as si
 		JOIN
 			`tabSales Team` as st on si.name = st.parent
+		JOIN 
+			`tabCustomer Group` as cg on si.customer_group = cg.name
 		WHERE
-			si.docstatus = 1 and si.posting_date between '{between_date[0]}' and '{between_date[1]}' {conditions}
+			si.docstatus = 1
+			and cg.parent_customer_group in ("A Zone", "B Zone", "D Zone")
+			and	si.posting_date between '{between_date[0]}' and '{between_date[1]}' {conditions}
 		GROUP BY
 			si.customer
 		ORDER BY

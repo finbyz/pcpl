@@ -23,7 +23,9 @@ cur_frm.fields_dict.secondary_party.get_query = function(doc) {
 
 frappe.ui.form.on('Sales Secondary', {
 	onload: function(frm) {
-		frm.set_value('posting_date', frappe.datetime.get_today())
+		if (!posting_date) {
+			frm.set_value('posting_date', frappe.datetime.get_today())
+		}
 	},
 	naming_series: function (frm) {
 		if (frappe.meta.get_docfield("Sales Secondary", "series_value", frm.doc.name)){

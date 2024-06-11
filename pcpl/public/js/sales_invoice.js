@@ -72,34 +72,34 @@ frappe.ui.form.on("Sales Invoice", {
                 }
             });
         });
-        frm.doc.items.forEach((item) => {
-            frappe.model.set_value(item.doctype, item.name, "discount_percentage", frm.doc.discount);
-            let effective_item_rate = item.price_list_rate;
-            let item_rate = item.rate;
-            if (in_list(["Sales Order", "Quotation"], item.parenttype) && item.blanket_order_rate) {
-                effective_item_rate = item.blanket_order_rate;
-            }
-            if (item.margin_type == "Percentage") {
-                item.rate_with_margin = flt(effective_item_rate)
-                    + flt(effective_item_rate) * ( flt(item.margin_rate_or_amount) / 100);
-            } else {
-                item.rate_with_margin = flt(effective_item_rate) + flt(item.margin_rate_or_amount);
-            }
-            item.base_rate_with_margin = flt(item.rate_with_margin) * flt(frm.doc.conversion_rate);
+        // frm.doc.items.forEach((item) => {
+        //     // frappe.model.set_value(item.doctype, item.name, "discount_percentage", frm.doc.discount);
+        //     let effective_item_rate = item.price_list_rate;
+        //     let item_rate = item.rate;
+        //     if (in_list(["Sales Order", "Quotation"], item.parenttype) && item.blanket_order_rate) {
+        //         effective_item_rate = item.blanket_order_rate;
+        //     }
+        //     if (item.margin_type == "Percentage") {
+        //         item.rate_with_margin = flt(effective_item_rate)
+        //             + flt(effective_item_rate) * ( flt(item.margin_rate_or_amount) / 100);
+        //     } else {
+        //         item.rate_with_margin = flt(effective_item_rate) + flt(item.margin_rate_or_amount);
+        //     }
+        //     item.base_rate_with_margin = flt(item.rate_with_margin) * flt(frm.doc.conversion_rate);
 
-            item_rate = flt(item.rate_with_margin , precision("rate", item));
+        //     item_rate = flt(item.rate_with_margin , precision("rate", item));
 
-            if (item.discount_percentage) {
-                item.discount_amount = flt(item.rate_with_margin) * flt(item.discount_percentage) / 100;
-            }
+        //     if (item.discount_percentage) {
+        //         item.discount_amount = flt(item.rate_with_margin) * flt(item.discount_percentage) / 100;
+        //     }
 
-            if (item.discount_amount) {
-                item_rate = flt((item.rate_with_margin) - (item.discount_amount), precision('rate', item));
-                item.discount_percentage = 100 * flt(item.discount_amount) / flt(item.rate_with_margin);
-            }
+        //     if (item.discount_amount) {
+        //         item_rate = flt((item.rate_with_margin) - (item.discount_amount), precision('rate', item));
+        //         item.discount_percentage = 100 * flt(item.discount_amount) / flt(item.rate_with_margin);
+        //     }
 
-            frappe.model.set_value(item.doctype, item.name, "rate", item_rate);
-        });
+        //     frappe.model.set_value(item.doctype, item.name, "rate", item_rate);
+        // });
     },
  
     taxes_set_values:function(frm){

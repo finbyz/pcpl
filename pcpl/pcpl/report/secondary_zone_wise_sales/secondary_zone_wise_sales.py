@@ -69,9 +69,6 @@ def get_data(filters):
 			LEFT join  `tabSales Secondary` as ss on ss.name=ssi.parent
 			LEFT join `tabCustomer` as customer on customer.name = ss.secondary_party
 			LEFT join `tabCustomer Group` as customer_g on customer_g.name = customer.customer_group
-			
-			
-			
 		where
 			customer_g.is_secondary_group=1 {conditions} 
 		order by posting_date desc

@@ -108,6 +108,9 @@ doc_events = {
 	# 	"on_cancel": "method",
 	# 	"on_trash": "method"
 	# }
+    "Vehicle Log":{
+        "before_naming":"pcpl.pcpl.doc_events.naming_series.before_naming"
+    },
     "Sales Invoice": {
         "before_save": "pcpl.pcpl.doc_events.sales_invoice.before_save",
         "before_submit": "pcpl.pcpl.doc_events.sales_invoice.before_submit",
