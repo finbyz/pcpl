@@ -108,12 +108,27 @@ frappe.ui.form.on("Sales Invoice", {
         frm.doc.items.forEach(function (i) {
             total_rate += flt((i.qty*i.free_item_pricelist_rate));
         });
+
+        console.log("Total MRP Amount: " + total_rate);
+       
         frm.set_value("total_mrp_amount",total_rate)
         var tds_account_head = [];
+        
         
         frm.doc.taxes.forEach(function(i) {
             tds_account_head.push(i.account_head);
         }); 
+
+        // if (frm.doc.taxes && Array.isArray(frm.doc.taxes)) {
+        //     frm.doc.taxes.forEach(function(i) {
+        //         if (i.account_head) {
+        //             tds_account_head.push(i.account_head);
+        //         }
+        //     });
+        // } else {
+        //     frappe.msgprint(__('Taxes table is empty or not defined.'));
+        // }
+
 
         if(!tds_account_head.includes(frm.doc.tds_account)){
             var childTable = cur_frm.add_child("taxes");
