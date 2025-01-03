@@ -1,17 +1,8 @@
 cur_frm.fields_dict.income_account.get_query = function(doc) {
-	if(doc.company == "Prince Care Pharma Pvt. Ltd."){
-		return {
-			filters:{
-				'account_type':"Income Account",
-				'company': doc.company
-			}
-		}
-	} else if(doc.company == "Prince Supplico"){
-        return {
-            filters: {
-                'account_type':"Income Account",
-                "company": doc.company
-            }
+    return {
+        filters:{
+            'account_type':"Income Account",
+            'company': doc.company
         }
     }
 };

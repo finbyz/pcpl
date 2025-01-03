@@ -122,7 +122,7 @@ doc_events = {
         "before_save": "pcpl.pcpl.doc_events.purchase_invoice.before_save"
     },
     "Sales Secondary":{
-        "before_naming": "finbyzerp.api.before_naming",
+        "before_naming": "finbyzerp.finbyzerp.doc_events.before_naming.before_naming",
     },
     "Sales Order":{
         "before_validate": ["pcpl.api.set_sales_taxes_and_charges", "pcpl.pcpl.doc_events.sales_order.before_validate","pcpl.api.update_discounted_price"],
